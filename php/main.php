@@ -26,7 +26,7 @@ add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
 function postStates( $states, $post ) {
 
 	if ( $post->ID == (SETTINGS['mediagallery-pages'] ?? '')) {
-		$states[] = __('Media gallery page');
+		$states[] = __('Media gallery page', 'tsjippy');
 	}
 
 	return $states;

@@ -15,7 +15,7 @@ function mediaFieldsToEdit($formFields, $post ){
 
     $formFields['gallery_visibility'] = array(
         'value' => $fieldValue,
-        'label' => __( 'Gallery visibility' ),
+        'label' => __( 'Gallery visibility' , 'tsjippy'),
         'input' => 'html',
         'html'  =>  ob_get_clean()
       );
