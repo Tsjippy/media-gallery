@@ -207,7 +207,8 @@ async function downloadMedia(target){
         CancelButtonText: "Cancel"
     };
 
-    let response = await new Main.Alert("Downloading of materials is only allowed for use in presentations. <br>You should not share this file with others as it may contain privacy sensitive information", 'loader', options);
+    let alerter       = new Main.Alert("Downloading of materials is only allowed for use in presentations. <br>You should not share this file with others as it may contain privacy sensitive information", 'loader', options);
+    let response	= await alerter.promise;
 
     if (response == 'confirm') {
         target.querySelector('a').click();
