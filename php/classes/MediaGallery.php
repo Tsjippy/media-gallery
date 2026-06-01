@@ -464,7 +464,7 @@ class MediaGallery{
 
                     if(!empty($description)){
                         ?>
-                        <button type='button' class='button small description' data-description='<?php echo base64_encode($description);?>' title='<?php echo strip_tags($title);?>'>Description</button>
+                        <button type='button' class='button small description' data-description='<?php echo base64_encode($description);?>' title='<?php echo wp_strip_all_tags($title);?>'>Description</button>
                         <?php
                     }
 
