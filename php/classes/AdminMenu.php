@@ -252,7 +252,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             ?>
             <form method='post' style='margin-bottom:10px;'>
                 <input type='hidden' class='no-reset' name='paths' value='<?php echo json_encode($orphans);?>'>
-                <button class='button' name='delete' value='delete-all'>Delete all <?php echo $count;?> orphan attachments</button>
+                <button class='button' name='delete' value='delete-all'>Delete all <?php echo esc_attr($count);?> orphan attachments</button>
             </form>
             <?php
 
@@ -271,7 +271,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                     ?>
                     
                     <form method='post' style='display: inline-block;'>
-                        <input type='hidden' class='no-reset' name='path' value='<?php echo $orphan;?>'>
+                        <input type='hidden' class='no-reset' name='path' value='<?php echo esc_attr($orphan);?>'>
                         <input type='submit' class='button' name='delete' value='Delete'>
                     </form>
                 </div>
@@ -320,12 +320,12 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                                 ?>
                                 <td>
                                     <form method='post' style='margin-bottom:10px;'>
-                                        <input type='hidden' class='no-reset' name='id' value='<?php echo $attachmentId;?>'>
+                                        <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId);?>'>
                                         <input type='hidden' class='no-reset' name='table' value='<?php echo $table['table'];?>'>
                                         <button class='button' name='ignore' value='ignore'>Ignore this table</button>
                                     </form>
                                     <form method='post'>
-                                        <input type='hidden' class='no-reset' name='id' value='<?php echo $attachmentId;?>'>
+                                        <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId);?>'>
                                         <input type='submit' class='button' name='used' value='Mark as used'>
                                     </form>
                                 </td>

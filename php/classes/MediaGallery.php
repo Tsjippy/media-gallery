@@ -136,9 +136,9 @@ class MediaGallery{
         $amount	= min(count($this->posts), $this->amount);
 
         ?>
-        <article class="media-gallery-article" data-types='<?php echo json_encode($this->types );?>' data-categories='<?php echo json_encode($this->cats);?>' data-speed='<?php echo $speed;?>' data-desc='<?php if($showDescription){echo 1;}else{echo 0;}?>' style='<?php echo $this->style;?>'>
+        <article class="media-gallery-article" data-types='<?php echo json_encode($this->types );?>' data-categories='<?php echo json_encode($this->cats);?>' data-speed='<?php echo esc_attr($speed);?>' data-desc='<?php if($showDescription){echo 1;}else{echo 0;}?>' style='<?php echo $this->style;?>'>
             <h3 class="media-gallery-title">
-                <?php echo $title;?>
+                <?php echo esc_attr($title);?>
             </h3>
             <div class="row">
                 <?php
@@ -153,8 +153,8 @@ class MediaGallery{
                         <div class="card card-profile card-plain">
                             <div class="col-md-5">
                                 <div class="card-image <?php if(!$showDescription){echo 'square';}?>">
-                                    <a href='<?php echo $pageUrl;?>'>
-                                        <img class='img' alt='<?php echo $title;?>' src='<?php echo wp_get_attachment_image_url($post->ID);?>' title='<?php echo $title;?>' loading='lazy'>
+                                    <a href='<?php echo esc_url($pageUrl);?>'>
+                                        <img class='img' alt='<?php echo esc_attr($title);?>' src='<?php echo wp_get_attachment_image_url($post->ID);?>' title='<?php echo esc_attr($title);?>' loading='lazy'>
                                     </a>
                                 </div>
                             </div>
@@ -163,8 +163,8 @@ class MediaGallery{
                                 ?>
                                 <div class="col-md-7">
                                     <div class="content">
-                                        <a href='<?php echo $pageUrl;?>'>
-                                            <h4 class='card-title'><?php echo $title;?></h4>
+                                        <a href='<?php echo esc_url($pageUrl);?>'>
+                                            <h4 class='card-title'><?php echo esc_attr($title);?></h4>
                                             <div class='card-description'><?php echo  force_balance_tags(wp_kses_post(get_the_excerpt($post->ID)));?></div>
                                         </a>
                                     </div>
@@ -227,7 +227,7 @@ class MediaGallery{
                 <?php
                 if($url){
                     ?>
-                    <a href='<?php echo $url;?>?type=attachment' class="button">Upload new media</a>
+                    <a href='<?php echo esc_url($url);?>?type=attachment' class="button">Upload new media</a>
                     <?php
                 }
                 ?>
@@ -272,8 +272,8 @@ class MediaGallery{
                     }
                     ?>
                     <label>
-                        <input type='checkbox' name='media-category' class='media-cat-selector' value='<?php echo $cat->slug;?>' <?php echo $checked;?>>
-                        <?php echo $cat->name;?>
+                        <input type='checkbox' name='media-category' class='media-cat-selector' value='<?php echo esc_attr($cat->slug);?>' <?php echo $checked;?>>
+                        <?php echo esc_attr($cat->name);?>
                     </label>
                     <?php
                 }
@@ -375,9 +375,9 @@ class MediaGallery{
 
             $index  = $startIndex + $i;
             ?>
-            <div class='cell <?php echo $type;?>' data-index='<?php echo $index;?>'>
+            <div class='cell <?php echo esc_attr($type);?>' data-index='<?php echo esc_attr($index);?>'>
                 <div class='image-wrapper'>
-                    <img src='<?php echo $iconUrl;?>' alt='<?php echo $title;?>' loading='lazy' class='media-item' width='150' height='120' title='<?php echo $title;?>'>
+                    <img src='<?php echo esc_url($iconUrl);?>' alt='<?php echo esc_attr($title);?>' loading='lazy' class='media-item' width='150' height='120' title='<?php echo esc_attr($title);?>'>
                 </div>
                 <?php
                 if(!empty($description)){
@@ -395,7 +395,7 @@ class MediaGallery{
             **** FULL SCREEN VIEWS ****
             */
             ?>
-            <div class="large-image <?php echo $type;?> hidden" data-index='<?php echo $index;?>'>
+            <div class="large-image <?php echo esc_attr($type);?> hidden" data-index='<?php echo esc_attr($index);?>'>
                 <?php
                 //Only show back button if not the first item
                 if($i > 1){
@@ -442,7 +442,7 @@ class MediaGallery{
                     <div id="imgtext">
                         <div class="image-title-wrapper">
                             <?php
-                            echo $title;
+                            echo esc_attr($title);
                             ?>
                         </div>
                     </div>
@@ -469,7 +469,7 @@ class MediaGallery{
                     }
 
                     ?>
-                        <a class='button small' href="<?php echo $attachmentUrl;?>">Link</a>
+                        <a class='button small' href="<?php echo esc_url($attachmentUrl);?>">Link</a>
                     <?php
 
                     $url            = apply_filters('tsjippy_media_gallery_download_url', $url, $id);
@@ -479,7 +479,7 @@ class MediaGallery{
                         ?>
                         <button type="button" class="button small download">
                             Download
-                            <a href='<?php echo $url;?>' class='hidden' download="<?php echo $fileName;?>">Download</a>
+                            <a href='<?php echo esc_url($url);?>' class='hidden' download="<?php echo esc_attr($fileName);?>">Download</a>
                         </button>
                         <?php
                     }

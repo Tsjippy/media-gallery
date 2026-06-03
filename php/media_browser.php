@@ -9,8 +9,8 @@ function mediaFieldsToEdit($formFields, $post ){
 
     ob_start();
     ?>
-    <input type='radio' name='attachments[<?php echo $post->ID;?>][gallery_visibility]' value='show' <?php if($fieldValue == 'show') echo 'checked';?>> Show
-    <input type='radio' name='attachments[<?php echo $post->ID;?>][gallery_visibility]' value='hide' <?php if($fieldValue != 'show') echo 'checked';?>> Hide
+    <input type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][gallery_visibility]' value='show' <?php if($fieldValue == 'show') echo 'checked';?>> Show
+    <input type='radio' name='attachments[<?php echo esc_attr($post->ID);?>][gallery_visibility]' value='hide' <?php if($fieldValue != 'show') echo 'checked';?>> Hide
     <?php
 
     $formFields['gallery_visibility'] = array(
