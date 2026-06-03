@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- echo escaping
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.1.4] - 2026-06-03
+
+
+### Added
+- echo escaping
 
 ## [10.1.3] - 2026-06-01
 
