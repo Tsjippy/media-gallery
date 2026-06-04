@@ -427,7 +427,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 $attachmentId    = attachment_url_to_postid(TSJIPPY\pathToUrl($path));
                 if (!$attachmentId) {
                     // remove the file
-                    unlink($path);
+                    wp_delete_file($path);
                 } else {
                     // Update the attachment id
                     $newPostId        = attachment_url_to_postid(TSJIPPY\pathToUrl($newPath));
