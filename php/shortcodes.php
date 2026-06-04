@@ -1,15 +1,18 @@
 <?php
+
 namespace TSJIPPY\MEDIAGALLERY;
+
 use TSJIPPY;
 
 add_shortcode('mediagallery', __NAMESPACE__ . '\mediaGallery');
-function mediaGallery($atts) {
+function mediaGallery($atts)
+{
     $a = shortcode_atts(array(
         'categories'     => [],
         'types'         => ['image', 'audio', 'video'],
         'amount'        => 20,
         'color'         => '#FFFFFF'
-   ), $atts);
+    ), $atts);
 
     if (!is_array($a['categories'])) {
         $a['categories']    = explode(',', $a['categories']);

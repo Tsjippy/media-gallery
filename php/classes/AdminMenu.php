@@ -1,15 +1,18 @@
 <?php
+
 namespace TSJIPPY\MEDIAGALLERY;
+
 use TSJIPPY;
 
 use function TSJIPPY\addElement;
 use function TSJIPPY\addRawHtml;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
+class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
+{
 
     /**
      * AdminMenu constructor.
@@ -17,11 +20,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
      * @param array $settings The settings for the plugin
      * @param string $name The name of the plugin
      */
-    public function __construct($settings, $name) {
+    public function __construct($settings, $name)
+    {
         parent::__construct($settings, $name);
     }
 
-    public function settings($parent) {
+    public function settings($parent)
+    {
         addElement('label', $parent, [], 'Select the categories you do not want to be selectable');
 
         addElement('br', $parent);
@@ -31,7 +36,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             'order'           => 'ASC',
             'taxonomy'        => 'attachment_cat',
             'hide_empty'     => false,
-       ));
+        ));
 
         foreach ($categories as $category) {
             $label  = addElement('label', $parent, [], $category->name);
@@ -53,7 +58,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 $attributes,
                 '',
                 'afterBegin'
-           );
+            );
 
             addElement('br', $parent);
         }
@@ -61,18 +66,21 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         return true;
     }
 
-    public function emails($parent) {
+    public function emails($parent)
+    {
         return false;
     }
 
-    public function data($parent='') {
+    public function data($parent = '')
+    {
 
         return false;
     }
 
-    public function functions($parent) {
+    public function functions($parent)
+    {
         ob_start();
-        ?>
+?>
         <h4>Duplicate files</h4>
 
         <p>
@@ -97,15 +105,16 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     /**
      * Function to do extra actions from $_POST data. Overwrite if needed
      */
-    public function postActions() {
+    public function postActions()
+    {
         if (isset($_POST['fix-duplicates'])) {
-            $removed    = $this->duplicateFinder(wp_upload_dir()['basedir'], wp_upload_dir()['basedir']. '/private');
+            $removed    = $this->duplicateFinder(wp_upload_dir()['basedir'], wp_upload_dir()['basedir'] . '/private');
 
             if (empty($removed)) {
                 return "<div class='success'>There was nothing to remove</div>";
-            }else{
+            } else {
                 ob_start();
-                ?>
+        ?>
                 <div class='success'>
                     Succesfully removed the following files:<br>
                     <?php
@@ -114,13 +123,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                     }
                     ?>
                 </div>
-                <?php
+            <?php
 
                 return ob_get_clean();
             }
-        }elseif (isset($_POST['scan-for-orphans'])) {
+        } elseif (isset($_POST['scan-for-orphans'])) {
             return $this->checkOrphanMedia();
-        }elseif (!empty($_POST['delete'])) {
+        } elseif (!empty($_POST['delete'])) {
             if (!empty($_POST['path'])) {
                 // move all to recycle bin
                 $path    = $_POST['path'];
@@ -139,10 +148,10 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 $count    = count($paths);
                 return "<div class='success'>$count attachments succesfully deleted</div>";
             }
-        }elseif (!empty($_POST['used']) && is_numeric($_POST['id'])) {
+        } elseif (!empty($_POST['used']) && is_numeric($_POST['id'])) {
             $excludeIds[]    = $_POST['id'];
             update_option('excludeAttachmentIds', $excludeIds);
-        }elseif (!empty($_POST['ignore']) && !empty($_POST['table'])) {
+        } elseif (!empty($_POST['ignore']) && !empty($_POST['table'])) {
             $excludedTables[]    = $_POST['table'];
             update_option('excludedAttachmentTables', $excludedTables);
         }
@@ -151,7 +160,8 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     /**
      * Finds media which is not used anywhere
      */
-    public function checkOrphanMedia() {
+    public function checkOrphanMedia()
+    {
         if (!current_user_can('delete_published_posts')) {
             return;
         }
@@ -162,7 +172,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         $excludedTables    = get_option('excludedAttachmentTables', []);
 
         $dir            = wp_upload_dir()['basedir'];
-        $files            = array_merge(glob($dir. '/*'), glob($dir. '/private/*'));
+        $files            = array_merge(glob($dir . '/*'), glob($dir . '/private/*'));
         $dirs            = array_filter($files, function ($file) {
             if (is_dir($file) && !in_array(basename($file), ['form_uploads', 'account_statements', 'profile_pictures', 'visa_uploads'])) {
                 return true;
@@ -172,7 +182,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
         $paths            = array_filter($files, 'is_file');
         foreach ($dirs as $d) {
-            $paths            = array_merge($paths, array_filter(glob($d. '/*'), 'is_file'));
+            $paths            = array_merge($paths, array_filter(glob($d . '/*'), 'is_file'));
         }
         $orphans        = [];
         $processed        = [];
@@ -190,7 +200,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 $path    = $matches[1];
             }
 
-            if (in_array($path, $processed) || in_array(str_replace(' . ' .$ext, '', $path), $processed)) {
+            if (in_array($path, $processed) || in_array(str_replace(' . ' . $ext, '', $path), $processed)) {
                 continue;
             }
 
@@ -220,36 +230,36 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                     "SELECT post_id from %i WHERE meta_key='_thumbnail_id' AND meta_value=%d",
                     $wpdb->postmeta,
                     $postId
-               )
-           ));
+                )
+            ));
             $profileImage    = !empty($wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT user_id from %i WHERE meta_key='profile_picture' AND meta_value=%d",
                     $wpdb->usermeta,
                     $postId
-               )
-           ));
+                )
+            ));
 
             if (in_array($postId, $excludeIds) || $featuredImage || $profileImage || $postId == $logoId || $postId == $iconId) {
                 continue;
-            }else{
+            } else {
                 // search db for url
                 $results    = TSJIPPY\searchAllDB(
                     TSJIPPY\pathToUrl($path),
-                    array_merge($excludedTables, [$wpdb->postmeta, $wpdb->prefix. 'tsjippy_statistics']),
+                    array_merge($excludedTables, [$wpdb->postmeta, $wpdb->prefix . 'tsjippy_statistics']),
                     ['guid']
-               );
+                );
 
                 // search db for postId
                 $results    = array_merge($results, TSJIPPY\searchAllDB(
                     $postId,
-                    array_merge($excludedTables, [$wpdb->postmeta, $wpdb->prefix. 'tsjippy_statistics']),
+                    array_merge($excludedTables, [$wpdb->postmeta, $wpdb->prefix . 'tsjippy_statistics']),
                     ['ID', 'meta_id', 'post-id', 'id', 'email_id', 'post_id', 'log_id', 'object_id', 'mediaId', 'umeta_id', 'action_id', 'option_id', 'user_id', 'hitID']
-               ));
+                ));
 
                 if (empty($results)) {
                     $orphans[] = $path;
-                }else{
+                } else {
                     $attachmentIds[$postId]    = array_values($results);
                 }
             }
@@ -263,31 +273,31 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
 
             ?>
             <form method='post' style='margin-bottom:10px;'>
-                <input type='hidden' class='no-reset' name='paths' value='<?php echo json_encode($orphans);?>'>
-                <button class='button' name='delete' value='delete-all'>Delete all <?php echo esc_attr($count);?> orphan attachments</button>
+                <input type='hidden' class='no-reset' name='paths' value='<?php echo json_encode($orphans); ?>'>
+                <button class='button' name='delete' value='delete-all'>Delete all <?php echo esc_attr($count); ?> orphan attachments</button>
             </form>
             <?php
 
             foreach ($orphans as $orphan) {
-                ?>
+            ?>
                 <div>
                     <?php
-                        $url    = TSJIPPY\pathToUrl($orphan);
-                        $name    = basename($orphan);
-                        if (@is_array(getimagesize($orphan))) {
-                            echo "<a href='$url'><img src='$url' alt='$name' width='100' height='100' title='$orphan' loading='lazy'></a>";
-                            echo "<span>" .basename($orphan). "</span>";
-                        } else {
-                            echo "<a href='$url' title='$orphan'>$name</a>";
-                        }
+                    $url    = TSJIPPY\pathToUrl($orphan);
+                    $name    = basename($orphan);
+                    if (@is_array(getimagesize($orphan))) {
+                        echo "<a href='$url'><img src='$url' alt='$name' width='100' height='100' title='$orphan' loading='lazy'></a>";
+                        echo "<span>" . basename($orphan) . "</span>";
+                    } else {
+                        echo "<a href='$url' title='$orphan'>$name</a>";
+                    }
                     ?>
 
                     <form method='post' style='display: inline-block;'>
-                        <input type='hidden' class='no-reset' name='path' value='<?php echo esc_attr($orphan);?>'>
+                        <input type='hidden' class='no-reset' name='path' value='<?php echo esc_attr($orphan); ?>'>
                         <input type='submit' class='button' name='delete' value='Delete'>
                     </form>
                 </div>
-                <?php
+            <?php
             }
         }
 
@@ -306,49 +316,49 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                 </thead>
                 <tbody>
                     <?php
-                    foreach ($attachmentIds as $attachmentId=>$data) {
+                    foreach ($attachmentIds as $attachmentId => $data) {
                         $type    = explode('/', get_post_mime_type($attachmentId))[0];
                         if ($type == 'image') {
                             $html    = wp_get_attachment_image($attachmentId);
-                        }else{
+                        } else {
                             $url    = wp_get_attachment_url($attachmentId);
                             $title    = get_the_title($attachmentId);
                             $html    = "<a href='$url'>$title</a>";
                         }
 
-                        foreach ($data as $index=>$table) {
+                        foreach ($data as $index => $table) {
                             echo "<tr>";
-                                if ($index == 0) {
-                                    $rowspan    = count($data);
-                                    echo "<td rowspan='$rowspan' style='max-width: 300px;'>$html</td>";
-                                }
+                            if ($index == 0) {
+                                $rowspan    = count($data);
+                                echo "<td rowspan='$rowspan' style='max-width: 300px;'>$html</td>";
+                            }
 
-                                // data
-                                foreach ($table as $value) {
-                                    echo "<td>$value</td>";
-                                }
+                            // data
+                            foreach ($table as $value) {
+                                echo "<td>$value</td>";
+                            }
 
-                                // actions
-                                ?>
-                                <td>
-                                    <form method='post' style='margin-bottom:10px;'>
-                                        <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId);?>'>
-                                        <input type='hidden' class='no-reset' name='table' value='<?php echo $table['table'];?>'>
-                                        <button class='button' name='ignore' value='ignore'>Ignore this table</button>
-                                    </form>
-                                    <form method='post'>
-                                        <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId);?>'>
-                                        <input type='submit' class='button' name='used' value='Mark as used'>
-                                    </form>
-                                </td>
+                            // actions
+                    ?>
+                            <td>
+                                <form method='post' style='margin-bottom:10px;'>
+                                    <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
+                                    <input type='hidden' class='no-reset' name='table' value='<?php echo $table['table']; ?>'>
+                                    <button class='button' name='ignore' value='ignore'>Ignore this table</button>
+                                </form>
+                                <form method='post'>
+                                    <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
+                                    <input type='submit' class='button' name='used' value='Mark as used'>
+                                </form>
+                            </td>
                             </tr>
-                            <?php
+                    <?php
                         }
                     }
                     ?>
                 </tbody>
             </table>
-            <?php
+<?php
         }
 
         return ob_get_clean();
@@ -360,25 +370,26 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
      * @param    string    $dir    the directory to scan
      * @param    string    $dir2    An optional second directory to scan
      */
-    public function duplicateFinder($dir, $dir2='') {
+    public function duplicateFinder($dir, $dir2 = '')
+    {
         global $wpdb;
 
         $dir    = trim($dir, '/\\');
         //get a files array
-        $files = array_filter(glob($dir. '/*'), 'is_file');
+        $files = array_filter(glob($dir . '/*'), 'is_file');
 
         $logoId            = get_option('site_logo');
         $iconId            = get_option('site_icon');
 
         if (!empty($dir2)) {
             $dir2    = trim($dir2, '/\\');
-            $files = array_merge($files, array_filter(glob($dir2. '/*'), 'is_file'));
+            $files = array_merge($files, array_filter(glob($dir2 . '/*'), 'is_file'));
         }
 
         unset(
-            $files[array_search(' . ',$files)],
+            $files[array_search(' . ', $files)],
             $files[array_search(' .. ', $files)]
-       );
+        );
 
         //get an array of file hashes
         $hashArr = [];
@@ -399,7 +410,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         // Loop over all duplicates
         foreach ($duplicates as $duplicate) {
             // get all files with this hash
-            $dubs    = array_filter($hashArr, function ($value)use($duplicate) {
+            $dubs    = array_filter($hashArr, function ($value) use ($duplicate) {
                 return $value    == $duplicate;
             });
 
@@ -411,13 +422,13 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
             unset($paths[0]);
 
             // Remove the rest
-            foreach ($paths as $key=>$path) {
+            foreach ($paths as $key => $path) {
                 // delete the attachment
                 $attachmentId    = attachment_url_to_postid(TSJIPPY\pathToUrl($path));
                 if (!$attachmentId) {
                     // remove the file
                     unlink($path);
-                }else{
+                } else {
                     // Update the attachment id
                     $newPostId        = attachment_url_to_postid(TSJIPPY\pathToUrl($newPath));
 
@@ -426,9 +437,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                             "SELECT post_id from %i WHERE meta_key='_thumbnail_id' AND meta_value=%d",
                             $wpdb->postmeta,
                             $attachmentId
-                       ),
+                        ),
                         ARRAY_N
-                   );
+                    );
 
                     // post with this attachment as featured image is found
                     if (!empty($postIds)) {
@@ -443,8 +454,8 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
                             "SELECT user_id from %i WHERE meta_key='profile_picture' AND meta_value=%d",
                             $wpdb->usermeta,
                             $attachmentId
-                       )
-                   );
+                        )
+                    );
                     if (!empty($userIds)) {
                         foreach ($userIds as $userId) {
                             update_user_meta($userId, 'profile_picture', $newPostId);
@@ -480,8 +491,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
     /**
      * Move an attachment to the attachment recycle folder
      */
-    public function moveAttachmentToRecycleBin($path) {
-        $recycleBin    = WP_CONTENT_DIR. '/attachment-recylce';
+    public function moveAttachmentToRecycleBin($path)
+    {
+        $recycleBin    = WP_CONTENT_DIR . '/attachment-recylce';
         if (!is_dir($recycleBin)) {
             wp_mkdir_p($recycleBin);
         }
@@ -490,11 +502,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu{
         if (isset($matches[1])) {
             $path    = $matches[1];
         }
-        $paths            = array_filter(glob($path. '*'), 'is_file');
+        $paths            = array_filter(glob($path . '*'), 'is_file');
 
         if (is_array($paths)) {
             foreach ($paths as $path) {
-                rename($path, $recycleBin. '/' .basename($path));
+                rename($path, $recycleBin . '/' . basename($path));
             }
         }
     }

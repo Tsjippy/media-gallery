@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\MEDIAGALLERY;
+
 use TSJIPPY;
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
-function restApiInit() {
+function restApiInit()
+{
     //load more media
     register_rest_route(
-        RESTAPIPREFIX. '/media_gallery',
+        RESTAPIPREFIX . '/media_gallery',
         '/load_more_media',
         array(
             'methods'                => 'POST',
@@ -15,14 +18,14 @@ function restApiInit() {
 
                 if (empty($param['types'])) {
                     $types    = ['image', 'video', 'audio'];
-                }else{
+                } else {
                     $types    = explode(',', $param['types']);
                 }
 
                 $categories    = $param['categories'];
                 if (empty($param['categories'])) {
                     $categories    = [];
-                }elseif (!is_array($param['categories'])) {
+                } elseif (!is_array($param['categories'])) {
                     $categories    = explode(',', $param['categories']);
                 }
 
@@ -33,13 +36,13 @@ function restApiInit() {
             'args'                    => array(
                 'amount'        => array('required'    => true),
                 'page'            => array('required'    => true),
-           )
-       )
-   );
+            )
+        )
+    );
 
     //media search
     register_rest_route(
-        RESTAPIPREFIX. '/media_gallery',
+        RESTAPIPREFIX . '/media_gallery',
         '/media_search',
         array(
             'methods'                => 'POST',
@@ -49,7 +52,7 @@ function restApiInit() {
                 $categories    = $param['categories'];
                 if (!empty($categories) && !is_array($categories)) {
                     $categories    = explode(',', $categories);
-                }else{
+                } else {
                     $categories    = [];
                 }
 
@@ -60,12 +63,12 @@ function restApiInit() {
             'args'                    => array(
                 'amount'        => array('required'    => true),
                 'search'        => array('required'    => true),
-           )
-       )
-   );
+            )
+        )
+    );
 
     register_rest_route(
-        RESTAPIPREFIX. '/media_gallery',
+        RESTAPIPREFIX . '/media_gallery',
         '/change_cats',
         array(
             'methods'                => 'POST',
@@ -75,7 +78,7 @@ function restApiInit() {
                 $categories    = $param['categories'];
                 if (empty($param['categories'])) {
                     $categories    = [];
-                }elseif (!is_array($param['categories'])) {
+                } elseif (!is_array($param['categories'])) {
                     $categories    = explode(',', $param['categories']);
                 }
 
@@ -89,12 +92,12 @@ function restApiInit() {
             'permission_callback'     => '__return_true',        // Allow non-logged in users to access this endpoint
             'args'                    => array(
                 'amount'        => array('required'    => true)
-           )
-       )
-   );
+            )
+        )
+    );
 
     register_rest_route(
-        RESTAPIPREFIX. '/media_gallery',
+        RESTAPIPREFIX . '/media_gallery',
         '/show_media_gallery',
         array(
             'methods'                => 'POST',
@@ -103,13 +106,13 @@ function restApiInit() {
 
                 if (empty($param['categories'])) {
                     $categories    = [];
-                }elseif (!is_array($param['categories'])) {
+                } elseif (!is_array($param['categories'])) {
                     $categories    = json_decode($param['categories']);
                 }
 
                 if (empty($param['types'])) {
                     $types    = [];
-                }elseif (!is_array($param['types'])) {
+                } elseif (!is_array($param['types'])) {
                     $types    = json_decode($param['types']);
                 }
 
@@ -119,7 +122,7 @@ function restApiInit() {
             'permission_callback'     => '__return_true',        // Allow non-logged in users to access this endpoint
             'args'                    => array(
                 'amount'        => array('required'    => true)
-           )
-       )
-   );
+            )
+        )
+    );
 }

@@ -1,9 +1,12 @@
 <?php
+
 namespace TSJIPPY\MEDIAGALLERY;
+
 use TSJIPPY;
 use stdClass;
 
-class MediaGallery{
+class MediaGallery
+{
     public $acceptedMimes;
     public $types;
     public $amount;
@@ -17,7 +20,8 @@ class MediaGallery{
     public $backgroundColor;
     public $style;
 
-    public function __construct($types=['image', 'audio', 'video'], $amount=3, $cats=[], $rand=true, $page=1, $search='', $backgroundColor='#FFFFFF', $gradient=false) {
+    public function __construct($types = ['image', 'audio', 'video'], $amount = 3, $cats = [], $rand = true, $page = 1, $search = '', $backgroundColor = '#FFFFFF', $gradient = false)
+    {
         global $wp_query;
 
         $allMimes               = get_allowed_mime_types();
@@ -48,9 +52,9 @@ class MediaGallery{
 
         if (str_contains($backgroundColor, 'background')) {
             $this->style    = $this->backgroundColor;
-        }elseif ($gradient) {
+        } elseif ($gradient) {
             $this->style    = "background: linear-gradient(-90deg, transparent 0 0.1%, $this->backgroundColor, transparent 99.9% 100%);";
-        }else{
+        } else {
             $this->style    = "background-color: $this->backgroundColor;";
         }
 
@@ -64,7 +68,8 @@ class MediaGallery{
      *
      * Get media from db
      */
-    public function getMedia() {
+    public function getMedia()
+    {
         $args = array(
             'post_status'       => 'inherit',
             'post_type'         => 'attachment',
@@ -75,9 +80,9 @@ class MediaGallery{
                     'key'     => 'gallery_visibility',
                     'value'   => 'show',
                     'compare' => '=='
-               )
-           )
-       );
+                )
+            )
+        );
 
         if ($this->page != 1) {
             $args['paged']    = $this->page;
@@ -85,7 +90,7 @@ class MediaGallery{
 
         if ($this->rand) {
             $args['orderby']    = 'rand';
-        }else{
+        } else {
             $args['orderby']    = 'modified';
         }
 
@@ -123,7 +128,8 @@ class MediaGallery{
      *
      * @return    string                        The html
      */
-    public function mediaGallery($title, $speed = 60, $showDescription=true) {
+    public function mediaGallery($title, $speed = 60, $showDescription = true)
+    {
 
         if (empty($this->total)) {
             return '';
@@ -135,52 +141,58 @@ class MediaGallery{
         // make sure we only try to display as many posts as available
         $amount    = min(count($this->posts), $this->amount);
 
-        ?>
-        <article class="media-gallery-article" data-types='<?php echo json_encode($this->types);?>' data-categories='<?php echo json_encode($this->cats);?>' data-speed='<?php echo esc_attr($speed);?>' data-desc='<?php if ($showDescription) {echo 1;}else{echo 0;}?>' style='<?php echo $this->style;?>'>
+?>
+        <article class="media-gallery-article" data-types='<?php echo json_encode($this->types); ?>' data-categories='<?php echo json_encode($this->cats); ?>' data-speed='<?php echo esc_attr($speed); ?>' data-desc='<?php if ($showDescription) {
+                                                                                                                                                                                                                        echo 1;
+                                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                                        echo 0;
+                                                                                                                                                                                                                    } ?>' style='<?php echo $this->style; ?>'>
             <h3 class="media-gallery-title">
-                <?php echo esc_attr($title);?>
+                <?php echo esc_attr($title); ?>
             </h3>
             <div class="row">
                 <?php
-                while($amount > 0) {
+                while ($amount > 0) {
                     $post           = $this->posts[0];
                     unset($this->posts[0]);
                     $this->posts    = array_values($this->posts);
                     $pageUrl        = get_permalink($post->ID);
                     $title            = $post->post_title;
-                    ?>
+                ?>
                     <div class="media-gallery">
                         <div class="card card-profile card-plain">
                             <div class="col-md-5">
-                                <div class="card-image <?php if (!$showDescription) {echo 'square';}?>">
-                                    <a href='<?php echo esc_url($pageUrl);?>'>
-                                        <img class='img' alt='<?php echo esc_attr($title);?>' src='<?php echo wp_get_attachment_image_url($post->ID);?>' title='<?php echo esc_attr($title);?>' loading='lazy'>
+                                <div class="card-image <?php if (!$showDescription) {
+                                                            echo 'square';
+                                                        } ?>">
+                                    <a href='<?php echo esc_url($pageUrl); ?>'>
+                                        <img class='img' alt='<?php echo esc_attr($title); ?>' src='<?php echo wp_get_attachment_image_url($post->ID); ?>' title='<?php echo esc_attr($title); ?>' loading='lazy'>
                                     </a>
                                 </div>
                             </div>
                             <?php
                             if ($showDescription) {
-                                ?>
+                            ?>
                                 <div class="col-md-7">
                                     <div class="content">
-                                        <a href='<?php echo esc_url($pageUrl);?>'>
-                                            <h4 class='card-title'><?php echo esc_attr($title);?></h4>
-                                            <div class='card-description'><?php echo  force_balance_tags(wp_kses_post(get_the_excerpt($post->ID)));?></div>
+                                        <a href='<?php echo esc_url($pageUrl); ?>'>
+                                            <h4 class='card-title'><?php echo esc_attr($title); ?></h4>
+                                            <div class='card-description'><?php echo  force_balance_tags(wp_kses_post(get_the_excerpt($post->ID))); ?></div>
                                         </a>
                                     </div>
                                 </div>
-                                <?php
+                            <?php
                             }
                             ?>
                         </div>
                     </div>
-                    <?php
+                <?php
                     $amount--;
                 }
                 ?>
             </div>
         </article>
-        <?php
+    <?php
         return ob_get_clean();
     }
 
@@ -188,7 +200,8 @@ class MediaGallery{
      * Shows a filterable mediagalery
      * People can load more media as they desire
      */
-    public function filterableMediaGallery() {
+    public function filterableMediaGallery()
+    {
         ob_start();
 
 
@@ -206,11 +219,11 @@ class MediaGallery{
             'order'           => 'ASC',
             'taxonomy'        => 'attachment_cat',
             'hide_empty'     => false,
-       ));
+        ));
 
         $shouldSkip     = SETTINGS['categories'] ?? false;
 
-        foreach ($categories as $index=>$category) {
+        foreach ($categories as $index => $category) {
             if (in_array($category->slug, $shouldSkip)) {
                 unset($categories[$index]);
             }
@@ -218,17 +231,17 @@ class MediaGallery{
 
         $categories = apply_filters('tsjippy-media-gallery-categories', $categories);
 
-        ?>
-        <div class='mediagallery-wrapper' style='<?php echo $this->style;?>'>
+    ?>
+        <div class='mediagallery-wrapper' style='<?php echo $this->style; ?>'>
             <h4>Media gallery options</h4>
             <div class='mediabuttons'>
                 <input type='hidden' class='no-reset' id='paged' value=1>
 
                 <?php
                 if ($url) {
-                    ?>
-                    <a href='<?php echo esc_url($url);?>?type=attachment' class="button">Upload new media</a>
-                    <?php
+                ?>
+                    <a href='<?php echo esc_url($url); ?>?type=attachment' class="button">Upload new media</a>
+                <?php
                 }
                 ?>
                 Show:
@@ -257,9 +270,11 @@ class MediaGallery{
                     Audio
                 </label>
                 <input class="searchtext" type="text" placeholder="Search.. ">
-                <img class='search' src="<?php echo TSJIPPY\PICTURESURL. '/magnifier.png'?>" loading='lazy' alt="magnifier">
+                <img class='search' src="<?php echo TSJIPPY\PICTURESURL . '/magnifier.png' ?>" loading='lazy' alt="magnifier">
 
-                <button id='category-options' class='button small <?php if (!empty($this->cats)) { echo 'hidden'; }?>'>Categories</button>
+                <button id='category-options' class='button small <?php if (!empty($this->cats)) {
+                                                                        echo 'hidden';
+                                                                    } ?>'>Categories</button>
             </div>
 
             <div class='media-categories hidden'>
@@ -270,139 +285,141 @@ class MediaGallery{
                     if (in_array($cat->term_id, $this->cats)) {
                         $checked    = 'checked';
                     }
-                    ?>
+                ?>
                     <label>
-                        <input type='checkbox' name='media-category' class='media-cat-selector' value='<?php echo esc_attr($cat->slug);?>' <?php echo $checked;?>>
-                        <?php echo esc_attr($cat->name);?>
+                        <input type='checkbox' name='media-category' class='media-cat-selector' value='<?php echo esc_attr($cat->slug); ?>' <?php echo $checked; ?>>
+                        <?php echo esc_attr($cat->name); ?>
                     </label>
-                    <?php
+                <?php
                 }
                 ?>
             </div>
 
             <div id="media-loader-wrapper" class="hidden">
-                <<div class="loader-image-trigger"></div>
-                <div>Loading more...</div>
+                <<div class="loader-image-trigger">
             </div>
+            <div>Loading more...</div>
+        </div>
 
-            <div class="mediawrapper">
-                <?php
-                $mediaHtml  = $this->loadMediaHTML();
-                if ($mediaHtml) {
-                    echo $mediaHtml;
-                }else{
-                    echo "No media found";
-                }
-                ?>
-            </div>
-
+        <div class="mediawrapper">
             <?php
-            if ($mediaHtml && substr_count($mediaHtml, "class='cell") == $this->amount) {
-                ?>
-                <div style='text-align:center; margin-top:20px;'>
-                    <button id='loadmoremedia' type='button' class='button'>
-                        Load more
-                    </button>
-                </div><?php
+            $mediaHtml  = $this->loadMediaHTML();
+            if ($mediaHtml) {
+                echo $mediaHtml;
+            } else {
+                echo "No media found";
             }
             ?>
+        </div>
+
+        <?php
+        if ($mediaHtml && substr_count($mediaHtml, "class='cell") == $this->amount) {
+        ?>
+            <div style='text-align:center; margin-top:20px;'>
+                <button id='loadmoremedia' type='button' class='button'>
+                    Load more
+                </button>
+            </div><?php
+                }
+                    ?>
         </div><?php
 
-        return ob_get_clean();
-    }
-
-    /**
-     * Load more media items
-     *
-     * @param   int     $itemsToSkip    The amount of items to skip. Default false for none
-     * @param   int     $startIndex     The index to start loading from. Default 0
-     *
-     * @return  string                  The html
-     */
-    public function loadMediaHTML($itemsToSkip=false, $startIndex=0) {
-        $canEdit           = in_array('editor', wp_get_current_user()->roles);
-        $allMimes          = get_allowed_mime_types();
-        $acceptedMimes     = [];
-        foreach ($allMimes as $mime) {
-            $type   = explode('/', $mime)[0];
-            if (in_array($type, $this->acceptedMimes)) {
-                $acceptedMimes[]   = $mime;
-            }
-        }
-
-        if ( empty($this->posts)) {
-            return false;
-        }
-
-        ob_start();
-        $i  = ($this->page-1) * $this->amount-1;
-        while ( $this->wpQuery->have_posts()) : $this->wpQuery->the_post();
-            $i++;
-
-            //skip if needed
-            if (is_numeric($itemsToSkip) && $i < $itemsToSkip) {
-                continue;
+                return ob_get_clean();
             }
 
-            $id             = get_the_ID();
-            $url            = wp_get_attachment_thumb_url($id);
-            $iconUrl        = $url;
-            $title          = get_the_title();
-            $mime           = get_post_mime_type();
-            $type           = explode('/', $mime)[0];
-            $description    = ucfirst(get_the_content());
-            $attachmentUrl  = get_attachment_link();
+            /**
+             * Load more media items
+             *
+             * @param   int     $itemsToSkip    The amount of items to skip. Default false for none
+             * @param   int     $startIndex     The index to start loading from. Default 0
+             *
+             * @return  string                  The html
+             */
+            public function loadMediaHTML($itemsToSkip = false, $startIndex = 0)
+            {
+                $canEdit           = in_array('editor', wp_get_current_user()->roles);
+                $allMimes          = get_allowed_mime_types();
+                $acceptedMimes     = [];
+                foreach ($allMimes as $mime) {
+                    $type   = explode('/', $mime)[0];
+                    if (in_array($type, $this->acceptedMimes)) {
+                        $acceptedMimes[]   = $mime;
+                    }
+                }
 
-            /*
+                if (empty($this->posts)) {
+                    return false;
+                }
+
+                ob_start();
+                $i  = ($this->page - 1) * $this->amount - 1;
+                while ($this->wpQuery->have_posts()) : $this->wpQuery->the_post();
+                    $i++;
+
+                    //skip if needed
+                    if (is_numeric($itemsToSkip) && $i < $itemsToSkip) {
+                        continue;
+                    }
+
+                    $id             = get_the_ID();
+                    $url            = wp_get_attachment_thumb_url($id);
+                    $iconUrl        = $url;
+                    $title          = get_the_title();
+                    $mime           = get_post_mime_type();
+                    $type           = explode('/', $mime)[0];
+                    $description    = ucfirst(get_the_content());
+                    $attachmentUrl  = get_attachment_link();
+
+                    /*
             **** PREVIEW GRID ****
             */
 
-            // Replace icon with VIMEO icon
-            if ($type == 'video') {
-                $iconUrl       = apply_filters('wp_mime_type_icon', SITEURL. "/wp-includes/images/media/video.png", get_post_mime_type(), $id);
-            }elseif ($type == 'audio') {
-                $iconUrl       = SITEURL. "/wp-includes/images/media/audio.png";
-            }else{
-                //skip if not existing, and send e-mail
-                $path   = get_attached_file($id);
-                if (!file_exists($path)) {
-                    $this->amount-=1;
-                    TSJIPPY\printArray("Check file with id $id");
-                    wp_mail(get_option('admin_email'), 'Missing file', "Hi Admin,<br><br>A file is registered in the media gallery but does not exist: $path");
-                    continue;
-                }
-            }
+                    // Replace icon with VIMEO icon
+                    if ($type == 'video') {
+                        $iconUrl       = apply_filters('wp_mime_type_icon', SITEURL . "/wp-includes/images/media/video.png", get_post_mime_type(), $id);
+                    } elseif ($type == 'audio') {
+                        $iconUrl       = SITEURL . "/wp-includes/images/media/audio.png";
+                    } else {
+                        //skip if not existing, and send e-mail
+                        $path   = get_attached_file($id);
+                        if (!file_exists($path)) {
+                            $this->amount -= 1;
+                            TSJIPPY\printArray("Check file with id $id");
+                            wp_mail(get_option('admin_email'), 'Missing file', "Hi Admin,<br><br>A file is registered in the media gallery but does not exist: $path");
+                            continue;
+                        }
+                    }
 
-            $index  = $startIndex + $i;
-            ?>
-            <div class='cell <?php echo esc_attr($type);?>' data-index='<?php echo esc_attr($index);?>'>
+                    $index  = $startIndex + $i;
+                ?>
+            <div class='cell <?php echo esc_attr($type); ?>' data-index='<?php echo esc_attr($index); ?>'>
                 <div class='image-wrapper'>
-                    <img src='<?php echo esc_url($iconUrl);?>' alt='<?php echo esc_attr($title);?>' loading='lazy' class='media-item' width='150' height='120' title='<?php echo esc_attr($title);?>'>
+                    <img src='<?php echo esc_url($iconUrl); ?>' alt='<?php echo esc_attr($title); ?>' loading='lazy' class='media-item' width='150' height='120' title='<?php echo esc_attr($title); ?>'>
                 </div>
                 <?php
-                if (!empty($description)) {
-                    ?>
+                    if (!empty($description)) {
+                ?>
                     <div class='media-description hidden'>
-                        <?php echo $description;?>
+                        <?php echo $description; ?>
                     </div>
-                    <?php
-                }
+                <?php
+                    }
                 ?>
             </div>
             <?php
 
-            /*
+                    /*
             **** FULL SCREEN VIEWS ****
             */
             ?>
-            <div class="large-image <?php echo esc_attr($type);?> hidden" data-index='<?php echo esc_attr($index);?>'>
+            <div class="large-image <?php echo esc_attr($type); ?> hidden" data-index='<?php echo esc_attr($index); ?>'>
                 <?php
-                //Only show back button if not the first item
-                if ($i > 1) {
-                    ?>
+                    //Only show back button if not the first item
+                    if ($i > 1) {
+                ?>
                     <a href="#" class="previous-button">&#8249;</a>
-                    <?php
-                }
+                <?php
+                    }
                 ?>
 
                 <!-- Close the image -->
@@ -415,15 +432,15 @@ class MediaGallery{
                     if ($type == 'audio') {
                         // Start Audio tag
                         $mediaHtml  = "<audio loop='loop' controls='controls'>";
-                            $mediaHtml  .=  "<source src='$url'/>";
+                        $mediaHtml  .=  "<source src='$url'/>";
                         $mediaHtml  .=  '</audio>';
-                    }elseif ($type=='video') {
+                    } elseif ($type == 'video') {
                         $mediaHtml  =  "<video width='320' height='240' controls>";
-                            $mediaHtml  .=  "<source src='$url' type='$mime'>";
+                        $mediaHtml  .=  "<source src='$url' type='$mime'>";
                         $mediaHtml  .=  '</video>';
-                    }else{
+                    } else {
                         list($width, $height) = getimagesize(TSJIPPY\urlToPath($url));
-                        $ratio  = $height/$width;
+                        $ratio  = $height / $width;
 
                         // Get the url to the full size image
                         $fullUrl    = wp_get_attachment_url($id);
@@ -436,62 +453,62 @@ class MediaGallery{
                 </div>
 
                 <?php
-            // if (empty($videoUrl)) {
+                    // if (empty($videoUrl)) {
                     //only show image text on images
-                    ?>
-                    <div id="imgtext">
-                        <div class="image-title-wrapper">
-                            <?php
-                            echo esc_attr($title);
-                            ?>
-                        </div>
+                ?>
+                <div id="imgtext">
+                    <div class="image-title-wrapper">
+                        <?php
+                        echo esc_attr($title);
+                        ?>
                     </div>
-                    <?php
-                //}
+                </div>
+                <?php
+                    //}
 
-                if ($i != $this->total-1) {
-                    ?>
+                    if ($i != $this->total - 1) {
+                ?>
                     <a href="#" class="next-button">&#8250;</a>
-                    <?php
-                }
+                <?php
+                    }
                 ?>
 
                 <div class="button-wrapper">
                     <?php
                     if ($canEdit) {
-                        echo apply_filters('tsjippy-media-edit-link', "<a href='" .SITEURL. "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id);
+                        echo apply_filters('tsjippy-media-edit-link', "<a href='" . SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id);
                     }
 
                     if (!empty($description)) {
-                        ?>
-                        <button type='button' class='button small description' data-description='<?php echo base64_encode($description);?>' title='<?php echo wp_strip_all_tags($title);?>'>Description</button>
-                        <?php
+                    ?>
+                        <button type='button' class='button small description' data-description='<?php echo base64_encode($description); ?>' title='<?php echo wp_strip_all_tags($title); ?>'>Description</button>
+                    <?php
                     }
 
                     ?>
-                        <a class='button small' href="<?php echo esc_url($attachmentUrl);?>">Link</a>
+                    <a class='button small' href="<?php echo esc_url($attachmentUrl); ?>">Link</a>
                     <?php
 
                     $url            = apply_filters('tsjippy_media_gallery_download_url', $url, $id);
 
                     if (file_exists(TSJIPPY\urlToPath($url))) {
                         $fileName   = apply_filters('tsjippy_media_gallery_download_filename', '', $type, $id);
-                        ?>
+                    ?>
                         <button type="button" class="button small download">
                             Download
-                            <a href='<?php echo esc_url($url);?>' class='hidden' download="<?php echo esc_attr($fileName);?>">Download</a>
+                            <a href='<?php echo esc_url($url); ?>' class='hidden' download="<?php echo esc_attr($fileName); ?>">Download</a>
                         </button>
-                        <?php
+                    <?php
                     }
                     ?>
                 </div>
             </div>
 
-            <?php
-        endwhile;
+<?php
+                endwhile;
 
-        wp_reset_postdata();
+                wp_reset_postdata();
 
-        return ob_get_clean();
-    }
-}
+                return ob_get_clean();
+            }
+        }

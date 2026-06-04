@@ -1,9 +1,12 @@
 <?php
+
 namespace TSJIPPY\MEDIAGALLERY;
+
 use TSJIPPY;
 
 add_action('init', __NAMESPACE__ . '\initBlocks');
-function initBlocks() {
+function initBlocks()
+{
     register_block_type(
         __DIR__ . '/media-gallery/build',
         array(
@@ -22,12 +25,13 @@ function initBlocks() {
                     'default'    => []
                 ],
             ]
-       )
-   );
+        )
+    );
 }
 
 add_action('enqueue_block_assets', __NAMESPACE__ . '\loadBlockAssets');
-function loadBlockAssets() {
+function loadBlockAssets()
+{
     if (is_admin()) {
         TSJIPPY\enqueueScripts();
 
