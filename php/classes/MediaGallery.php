@@ -376,9 +376,9 @@ class MediaGallery
 
                     // Replace icon with VIMEO icon
                     if ($type == 'video') {
-                        $iconUrl       = apply_filters('wp_mime_type_icon', SITEURL . "/wp-includes/images/media/video.png", get_post_mime_type(), $id);
+                        $iconUrl       = apply_filters('wp_mime_type_icon', TSJIPPY\SITEURL . "/wp-includes/images/media/video.png", get_post_mime_type(), $id);
                     } elseif ($type == 'audio') {
-                        $iconUrl       = SITEURL . "/wp-includes/images/media/audio.png";
+                        $iconUrl       = TSJIPPY\SITEURL . "/wp-includes/images/media/audio.png";
                     } else {
                         //skip if not existing, and send e-mail
                         $path   = get_attached_file($id);
@@ -476,7 +476,7 @@ class MediaGallery
                 <div class="button-wrapper">
                     <?php
                     if ($canEdit) {
-                        echo apply_filters('tsjippy-media-edit-link', "<a href='" . SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id);
+                        echo apply_filters('tsjippy-media-edit-link', "<a href='" . TSJIPPY\SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id);
                     }
 
                     if (!empty($description)) {

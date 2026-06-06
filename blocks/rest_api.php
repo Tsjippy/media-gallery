@@ -9,7 +9,7 @@ function blockRestApiInit()
 {
     // show schedules
     register_rest_route(
-        RESTAPIPREFIX . '/mediagallery',
+        TSJIPPY\RESTAPIPREFIX . '/mediagallery',
         '/show',
         array(
             'methods'                 => 'POST',

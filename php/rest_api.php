@@ -9,7 +9,7 @@ function restApiInit()
 {
     //load more media
     register_rest_route(
-        RESTAPIPREFIX . '/media_gallery',
+        TSJIPPY\RESTAPIPREFIX . '/media_gallery',
         '/load_more_media',
         array(
             'methods'                => 'POST',
@@ -42,7 +42,7 @@ function restApiInit()
 
     //media search
     register_rest_route(
-        RESTAPIPREFIX . '/media_gallery',
+        TSJIPPY\RESTAPIPREFIX . '/media_gallery',
         '/media_search',
         array(
             'methods'                => 'POST',
@@ -68,7 +68,7 @@ function restApiInit()
     );
 
     register_rest_route(
-        RESTAPIPREFIX . '/media_gallery',
+        TSJIPPY\RESTAPIPREFIX . '/media_gallery',
         '/change_cats',
         array(
             'methods'                => 'POST',
@@ -97,7 +97,7 @@ function restApiInit()
     );
 
     register_rest_route(
-        RESTAPIPREFIX . '/media_gallery',
+        TSJIPPY\RESTAPIPREFIX . '/media_gallery',
         '/show_media_gallery',
         array(
             'methods'                => 'POST',
