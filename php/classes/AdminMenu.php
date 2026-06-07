@@ -132,14 +132,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         } elseif (!empty($_POST['delete'])) {
             if (!empty($_POST['path'])) {
                 // move all to recycle bin
-                $path    = $_POST['path'];
+                $path    = TSJIPPY\sanitize($_POST['path']);
                 $this->moveAttachmentToRecycleBin($path);
 
                 return "<div class='success'>Attachment succesfully deleted</div>";
             }
 
             if ($_POST['delete'] == 'delete-all' && !empty($_POST['paths'])) {
-                $paths    = json_decode(TSJIPPY\deslash($_POST['paths']));
+                $paths    = json_decode(TSJIPPY\sanitize($_POST['paths']));
 
                 foreach ($paths as $path) {
                     $this->moveAttachmentToRecycleBin($path);
@@ -149,10 +149,10 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 return "<div class='success'>$count attachments succesfully deleted</div>";
             }
         } elseif (!empty($_POST['used']) && is_numeric($_POST['id'])) {
-            $excludeIds[]    = $_POST['id'];
+            $excludeIds[]    = (int) $_POST['id'];
             update_option('excludeAttachmentIds', $excludeIds);
         } elseif (!empty($_POST['ignore']) && !empty($_POST['table'])) {
-            $excludedTables[]    = $_POST['table'];
+            $excludedTables[]    = TSJIPPY\sanitize($_POST['table']);
             update_option('excludedAttachmentTables', $excludedTables);
         }
     }
