@@ -4,7 +4,7 @@ namespace TSJIPPY\MEDIAGALLERY;
 
 use TSJIPPY;
 
-add_shortcode('mediagallery', __NAMESPACE__ . '\mediaGallery');
+add_shortcode('tsjippy_mediagallery', __NAMESPACE__ . '\mediaGallery');
 function mediaGallery($atts)
 {
     $a = shortcode_atts(array(

@@ -32,11 +32,11 @@ function editAttachment($attachmentId)
         $visibility = $_REQUEST['attachments'][$attachmentId]['gallery_visibility'];
 
         //check if changed
-        $prevVis   = get_post_meta($attachmentId, 'gallery_visibility', true);
+        $prevVis   = get_post_meta($attachmentId, 'tsjippy_gallery_visibility', true);
 
         if ($prevVis != $visibility) {
             //update post meta
-            update_post_meta($attachmentId, 'gallery_visibility', $visibility);
+            update_post_meta($attachmentId, 'tsjippy_gallery_visibility', $visibility);
         }
     }
 }
