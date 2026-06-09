@@ -31,7 +31,7 @@ function postStates($states, $post)
 {
 
     if ($post->ID == (SETTINGS['mediagallery-pages'] ?? '')) {
-        $states[] = __('Media gallery page', 'tsjippy');
+        $states[] = __('Media gallery page', '%TEXTDOMAIN%');
     }
 
     return $states;
