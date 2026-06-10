@@ -458,7 +458,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     );
                     if (!empty($userIds)) {
                         foreach ($userIds as $userId) {
-                            update_user_meta($userId, 'profile_picture', $newPostId);
+                            update_user_meta($userId, 'tsjippy_profile_picture', $newPostId);
                         }
                     }
 
