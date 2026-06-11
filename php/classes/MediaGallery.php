@@ -77,7 +77,7 @@ class MediaGallery
             'posts_per_page'    => $this->amount,
             'meta_query'        => array(
                 array(
-                    'key'     => 'gallery_visibility',
+                    'key'     => 'tsjippy_gallery_visibility',
                     'value'   => 'show',
                     'compare' => '=='
                 )
@@ -93,7 +93,6 @@ class MediaGallery
         } else {
             $args['orderby']    = 'modified';
         }
-
 
         if (!empty($this->cats) && !in_array(-1, $this->cats)) {
             $args['tax_query'] = ['relation' => 'OR'];
@@ -221,7 +220,7 @@ class MediaGallery
             'hide_empty'     => false,
         ));
 
-        $shouldSkip     = SETTINGS['categories'] ?? false;
+        $shouldSkip     = SETTINGS['categories'] ?? [];
 
         foreach ($categories as $index => $category) {
             if (in_array($category->slug, $shouldSkip)) {
