@@ -71,11 +71,11 @@ class MediaGallery
     public function getMedia()
     {
         $args = array(
-            'post_status'       => 'inherit',
-            'post_type'         => 'attachment',
-            'post_mime_type'    => $this->acceptedMimes,
-            'posts_per_page'    => $this->amount,
-            'meta_query'        => array(
+            'post_status'     => 'inherit',
+            'post_type'       => 'attachment',
+            'post_mime_type'  => $this->acceptedMimes,
+            'posts_per_page'  => $this->amount,
+            'meta_query'      => array(
                 array(
                     'key'     => 'tsjippy_gallery_visibility',
                     'value'   => 'show',
@@ -89,16 +89,15 @@ class MediaGallery
         }
 
         if ($this->rand) {
-            $args['orderby']    = 'rand';
+            $args['orderby']  = 'rand';
         } else {
-            $args['orderby']    = 'modified';
+            $args['orderby']  = 'modified';
         }
 
         if (!empty($this->cats) && !in_array(-1, $this->cats)) {
             $args['tax_query'] = ['relation' => 'OR'];
 
             foreach ($this->cats as $cat) {
-
                 $args['tax_query'][]    = [
                     'taxonomy'  => 'attachment_cat',
                     'field'     => 'slug',
@@ -140,12 +139,15 @@ class MediaGallery
         // make sure we only try to display as many posts as available
         $amount    = min(count($this->posts), $this->amount);
 
-?>
-        <article class="media-gallery-article" data-types='<?php echo json_encode($this->types); ?>' data-categories='<?php echo json_encode($this->cats); ?>' data-speed='<?php echo esc_attr($speed); ?>' data-desc='<?php if ($showDescription) {
-                                                                                                                                                                                                                        echo 1;
-                                                                                                                                                                                                                    } else {
-                                                                                                                                                                                                                        echo 0;
-                                                                                                                                                                                                                    } ?>' style='<?php echo $this->style; ?>'>
+        ?>
+        <article 
+            class="media-gallery-article" 
+            data-types='<?php echo json_encode($this->types); ?>' 
+            data-categories='<?php echo json_encode($this->cats); ?>' 
+            data-speed='<?php echo esc_attr($speed); ?>' 
+            data-desc='<?php echo $showDescription ? 1 : 0; ?>' 
+            style='<?php echo $this->style; ?>'
+        >
             <h3 class="media-gallery-title">
                 <?php echo esc_attr($title); ?>
             </h3>
