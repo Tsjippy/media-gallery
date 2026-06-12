@@ -44,7 +44,7 @@ register_activation_hook(__FILE__, function () {
         require_once(__DIR__  . '/shared-functionality/loader.php');
     }
 
-    $postId        = \TSJIPPY\ADMIN\createDefaultPage('Media Gallery', '[mediagallery]');
+    $postId        = \TSJIPPY\ADMIN\createDefaultPage('Media Gallery', '[tsjippy_mediagallery]');
 
     $pages      = SETTINGS['mediagallery-pages'] ?? [];
 
