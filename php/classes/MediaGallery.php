@@ -449,7 +449,7 @@ class MediaGallery
                         $mediaHtml  =  "<a href='$fullUrl' class='image'><img src='$url' loading='lazy' with='100%' height='100vh' style='top: max(0px, calc(50vh - 50vw * $ratio));' data-full='$fullUrl'></a>";
                     }
 
-                    echo apply_filters('tsjippy_media_gallery_item_html', $mediaHtml, $type, $id);
+                    echo apply_filters('tsjippy-media-gallery-item-html', $mediaHtml, $type, $id);
                     ?>
                 </div>
 
@@ -490,10 +490,10 @@ class MediaGallery
                     <a class='button small' href="<?php echo esc_url($attachmentUrl); ?>">Link</a>
                     <?php
 
-                    $url            = apply_filters('tsjippy_media_gallery_download_url', $url, $id);
+                    $url            = apply_filters('tsjippy-media-gallery-download-url', $url, $id);
 
                     if (file_exists(TSJIPPY\urlToPath($url))) {
-                        $fileName   = apply_filters('tsjippy_media_gallery_download_filename', '', $type, $id);
+                        $fileName   = apply_filters('tsjippy-media-gallery-download-filename', '', $type, $id);
                     ?>
                         <button type="button" class="button small download">
                             Download
