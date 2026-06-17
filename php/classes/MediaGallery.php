@@ -477,7 +477,7 @@ class MediaGallery
                 <div class="button-wrapper">
                     <?php
                     if ($canEdit) {
-                        echo apply_filters('tsjippy-media-edit-link', "<a href='" . TSJIPPY\SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id);
+                        echo apply_filters('tsjippy-media-gallery-edit-link', "<a href='" . TSJIPPY\SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id);
                     }
 
                     if (!empty($description)) {
