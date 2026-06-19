@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- request sanitazion
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.2.3] - 2026-06-19
+
+
+### Added
+- request sanitazion
 
 ## [10.2.2] - 2026-06-18
 
