@@ -29,7 +29,7 @@ add_action('edit_attachment', __NAMESPACE__ . '\editAttachment');
 function editAttachment($attachmentId)
 {
     if (isset($_REQUEST['attachments'][$attachmentId]['gallery_visibility'])) {
-        $visibility = $_REQUEST['attachments'][$attachmentId]['gallery_visibility'];
+        $visibility = TSJIPPY\sanitize($_REQUEST['attachments'][$attachmentId]['gallery_visibility'] ?? false);
 
         //check if changed
         $prevVis   = get_post_meta($attachmentId, 'tsjippy_gallery_visibility', true);

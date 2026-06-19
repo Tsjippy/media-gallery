@@ -505,8 +505,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         $paths            = array_filter(glob($path . '*'), 'is_file');
 
         if (is_array($paths)) {
+            $wpFileSystem   = TSJIPPY\loadWpFileSystem();
             foreach ($paths as $path) {
-                rename($path, $recycleBin . '/' . basename($path));
+                $wpFileSystem->move($path, $recycleBin . '/' . basename($path));
             }
         }
     }
