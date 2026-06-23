@@ -423,8 +423,7 @@ class MediaGallery
                     }
                 ?>
 
-                <!-- Close the image -->
-                <span class="closebtn">&times;</span>
+                <?php echo TSJIPPY\addCloseButtton();?>
 
                 <!-- Expanded media -->
                 <div class='fullscreen-media-wrapper'>
