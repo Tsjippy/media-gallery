@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- modal close button
 
 ### Fixed
 
