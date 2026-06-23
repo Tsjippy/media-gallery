@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- modal close button
 
 ### Fixed
 
 ### Updated
+
+## [10.2.8] - 2026-06-23
+
+
+### Changed
+- modal close button
 
 ## [10.2.7] - 2026-06-23
 
