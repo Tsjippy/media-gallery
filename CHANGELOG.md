@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- profile picture retrieval
 
 ### Updated
 
