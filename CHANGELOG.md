@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- profile picture retrieval
 
 ### Updated
+
+## [10.3.0] - 2026-06-24
+
+
+### Fixed
+- profile picture retrieval
 
 ## [10.2.9] - 2026-06-23
 
