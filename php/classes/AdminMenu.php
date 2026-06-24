@@ -234,7 +234,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             ));
             $profileImage    = !empty($wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT user_id from %i WHERE meta_key='profile_picture' AND meta_value=%d",
+                    "SELECT user_id from %i WHERE meta_key='tsjippy_profile_picture' AND meta_value=%d",
                     $wpdb->usermeta,
                     $postId
                 )
@@ -451,7 +451,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     // Check if used as profile image
                     $userIds    = $wpdb->get_results(
                         $wpdb->prepare(
-                            "SELECT user_id from %i WHERE meta_key='profile_picture' AND meta_value=%d",
+                            "SELECT user_id from %i WHERE meta_key='tsjippy_profile_picture' AND meta_value=%d",
                             $wpdb->usermeta,
                             $attachmentId
                         )
