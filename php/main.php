@@ -5,6 +5,11 @@ namespace TSJIPPY\MEDIAGALLERY;
 use TSJIPPY;
 
 //change visibility of an attachment when uploaded via frontend even if it is a picture
+/**
+ * Allow comments
+ * 
+ * @param   \WP_Post    $post       The new or updated post
+ */
 add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave');
 function afterPostSave($post)
 {
