@@ -103,11 +103,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     }
 
     /**
-     * Function to do extra actions from $_POST data. Overwrite if needed
+     * Function to do extra actions from $request data. Overwrite if needed
      */
-    public function postActions()
+    public function postActions($request)
     {
-        if (isset($_POST['fix-duplicates'])) {
+        if (isset($request['fix-duplicates'])) {
             $removed    = $this->duplicateFinder(wp_upload_dir()['basedir'], wp_upload_dir()['basedir'] . '/private');
 
             if (empty($removed)) {
@@ -127,19 +127,19 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
                 return ob_get_clean();
             }
-        } elseif (isset($_POST['scan-for-orphans'])) {
+        } elseif (isset($request['scan-for-orphans'])) {
             return $this->checkOrphanMedia();
-        } elseif (!empty($_POST['delete'])) {
-            if (!empty($_POST['path'])) {
+        } elseif (!empty($request['delete'])) {
+            if (!empty($request['path'])) {
                 // move all to recycle bin
-                $path    = TSJIPPY\sanitize($_POST['path']);
+                $path    = $request['path'];
                 $this->moveAttachmentToRecycleBin($path);
 
                 return "<div class='success'>Attachment succesfully deleted</div>";
             }
 
-            if ($_POST['delete'] == 'delete-all' && !empty($_POST['paths'])) {
-                $paths    = json_decode(TSJIPPY\sanitize($_POST['paths']));
+            if ($request['delete'] == 'delete-all' && !empty($request['paths'])) {
+                $paths    = json_decode($request['paths']);
 
                 foreach ($paths as $path) {
                     $this->moveAttachmentToRecycleBin($path);
@@ -148,11 +148,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 $count    = count($paths);
                 return "<div class='success'>$count attachments succesfully deleted</div>";
             }
-        } elseif (!empty($_POST['used']) && is_numeric($_POST['id'])) {
-            $excludeIds[]    = (int) $_POST['id'];
+        } elseif (!empty($request['used']) && is_numeric($request['id'])) {
+            $excludeIds[]    = (int) $request['id'];
             update_option('excludeAttachmentIds', $excludeIds);
-        } elseif (!empty($_POST['ignore']) && !empty($_POST['table'])) {
-            $excludedTables[]    = TSJIPPY\sanitize($_POST['table']);
+        } elseif (!empty($request['ignore']) && !empty($request['table'])) {
+            $excludedTables[]    = $request['table'];
             update_option('excludedAttachmentTables', $excludedTables);
         }
     }
@@ -168,27 +168,27 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
         global $wpdb;
 
-        $excludeIds        = get_option('excludeAttachmentIds', []);
-        $excludedTables    = get_option('excludedAttachmentTables', []);
+        $excludeIds     = get_option('excludeAttachmentIds', []);
+        $excludedTables = get_option('excludedAttachmentTables', []);
 
         $dir            = wp_upload_dir()['basedir'];
-        $files            = array_merge(glob($dir . '/*'), glob($dir . '/private/*'));
-        $dirs            = array_filter($files, function ($file) {
+        $files          = array_merge(glob($dir . '/*'), glob($dir . '/private/*'));
+        $dirs           = array_filter($files, function ($file) {
             if (is_dir($file) && !in_array(basename($file), ['form_uploads', 'account_statements', 'profile_pictures', 'visa_uploads'])) {
                 return true;
             }
             return false;
         });
 
-        $paths            = array_filter($files, 'is_file');
+        $paths          = array_filter($files, 'is_file');
         foreach ($dirs as $d) {
-            $paths            = array_merge($paths, array_filter(glob($d . '/*'), 'is_file'));
+            $paths      = array_merge($paths, array_filter(glob($d . '/*'), 'is_file'));
         }
         $orphans        = [];
-        $processed        = [];
-        $attachmentIds    = [];
-        $logoId            = get_option('site_logo');
-        $iconId            = get_option('site_icon');
+        $processed      = [];
+        $attachmentIds  = [];
+        $logoId         = get_option('site_logo');
+        $iconId         = get_option('site_icon');
 
         foreach ($paths as $path) {
             $ext    = pathinfo($path)['extension'];
@@ -224,15 +224,15 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             }
 
             // check if attachment id shows up anywhere in the db
-            $postId            = attachment_url_to_postid(\TSJIPPY\pathToUrl($path));
-            $featuredImage    = !empty($wpdb->get_results(
+            $postId        = attachment_url_to_postid(\TSJIPPY\pathToUrl($path));
+            $featuredImage = !empty($wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT post_id from %i WHERE meta_key='_thumbnail_id' AND meta_value=%d",
                     $wpdb->postmeta,
                     $postId
                 )
             ));
-            $profileImage    = !empty($wpdb->get_results(
+            $profileImage  = !empty($wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT user_id from %i WHERE meta_key='tsjippy_profile_picture' AND meta_value=%d",
                     $wpdb->usermeta,
@@ -244,14 +244,14 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 continue;
             } else {
                 // search db for url
-                $results    = TSJIPPY\searchAllDB(
+                $results   = TSJIPPY\searchAllDB(
                     TSJIPPY\pathToUrl($path),
                     array_merge($excludedTables, [$wpdb->postmeta, $wpdb->prefix . 'tsjippy_statistics']),
                     ['guid']
                 );
 
                 // search db for postId
-                $results    = array_merge($results, TSJIPPY\searchAllDB(
+                $results   = array_merge($results, TSJIPPY\searchAllDB(
                     $postId,
                     array_merge($excludedTables, [$wpdb->postmeta, $wpdb->prefix . 'tsjippy_statistics']),
                     ['ID', 'meta_id', 'post-id', 'id', 'email_id', 'post_id', 'log_id', 'object_id', 'mediaId', 'umeta_id', 'action_id', 'option_id', 'user_id', 'hitID']
