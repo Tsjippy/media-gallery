@@ -20,5 +20,5 @@ function mediaGallery($atts)
 
     $mediaGallery   = new MediaGallery($a['types'], $a['amount'], $a['categories'], false, 1, '', $a['color']);
 
-    return $mediaGallery->filterableMediaGallery();
+    return $mediaGallery->filterableMediaGallery(false);
 }

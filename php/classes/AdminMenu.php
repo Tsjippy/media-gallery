@@ -119,7 +119,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     Succesfully removed the following files:<br>
                     <?php
                     foreach ($removed as $path) {
-                        echo "$path<br>";
+                        echo esc_html($path)."<br>";
                     }
                     ?>
                 </div>
@@ -269,9 +269,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
         if (!empty($orphans)) {
             $count    = count($orphans);
-            echo "<h1>Orphan media ($count)</h1>";
-
             ?>
+            <h1>
+                Orphan media (<?php esc_attr($count);?>)
+            </h1>
+
             <form method='post' style='margin-bottom:10px;'>
                 <input type='hidden' class='no-reset' name='paths' value='<?php echo json_encode($orphans); ?>'>
                 <button class='button' name='delete' value='delete-all'>Delete all <?php echo esc_attr($count); ?> orphan attachments</button>
@@ -285,10 +287,20 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     $url    = TSJIPPY\pathToUrl($orphan);
                     $name    = basename($orphan);
                     if (@is_array(getimagesize($orphan))) {
-                        echo "<a href='$url'><img src='$url' alt='$name' width='100' height='100' title='$orphan' loading='lazy'></a>";
-                        echo "<span>" . basename($orphan) . "</span>";
+                        ?>
+                        <a href='<?php echo esc_url($url);?>'>
+                            <img src='<?php echo esc_url($url);?>' alt='$name' width='100' height='100' title='<?php esc_attr($orphan);?>' loading='lazy'>
+                        </a>
+                        <span>
+                            <?php echo esc_html(basename($orphan));?>
+                        </span>
+                        <?php
                     } else {
-                        echo "<a href='$url' title='$orphan'>$name</a>";
+                        ?>
+                        <a href='<?php echo esc_url($url);?>' title='<?php echo esc_attr($orphan);?>'>
+                            <?php echo esc_html($name);?>
+                        </a>
+                        <?php
                     }
                     ?>
 
@@ -327,23 +339,33 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                         }
 
                         foreach ($data as $index => $table) {
-                            echo "<tr>";
+                            ?>
+                            <tr>
+                                <?php
                             if ($index == 0) {
                                 $rowspan    = count($data);
-                                echo "<td rowspan='$rowspan' style='max-width: 300px;'>$html</td>";
+                                ?>
+                                <td rowspan='<?php esc_attr($rowspan);?>' style='max-width: 300px;'>
+                                    <?php echo esc_html($html);?>
+                                </td>
+                                <?php
                             }
 
                             // data
                             foreach ($table as $value) {
-                                echo "<td>$value</td>";
+                                ?>
+                                <td>
+                                    <?php esc_html($value);?>
+                                </td>
+                                <?php
                             }
 
                             // actions
-                    ?>
+                            ?>
                             <td>
                                 <form method='post' style='margin-bottom:10px;'>
                                     <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
-                                    <input type='hidden' class='no-reset' name='table' value='<?php echo $table['table']; ?>'>
+                                    <input type='hidden' class='no-reset' name='table' value='<?php echo esc_attr($table['table']); ?>'>
                                     <button class='button' name='ignore' value='ignore'>Ignore this table</button>
                                 </form>
                                 <form method='post'>
