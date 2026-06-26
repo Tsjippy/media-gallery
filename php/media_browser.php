@@ -8,7 +8,7 @@ use TSJIPPY;
 add_filter('attachment_fields_to_edit', __NAMESPACE__ . '\mediaFieldsToEdit', 10, 2);
 function mediaFieldsToEdit($formFields, $post)
 {
-    $fieldValue = get_post_meta($post->ID, 'gallery_visibility', true);
+    $fieldValue = get_post_meta($post->ID, "tsjippy_gallery_visibility", true);
 
     ob_start();
 ?>
