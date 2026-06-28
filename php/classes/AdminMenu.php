@@ -32,10 +32,10 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         addElement('br', $parent);
 
         $categories    = get_categories(array(
-            'orderby'         => 'name',
-            'order'           => 'ASC',
-            'taxonomy'        => 'attachment_cat',
-            'hide_empty'     => false,
+            'orderby'    => 'name',
+            'order'      => 'ASC',
+            'taxonomy'   => 'attachment_cat',
+            'hide_empty' => false,
         ));
 
         foreach ($categories as $category) {
@@ -43,12 +43,12 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
 
             $attributes = [
                 'type' => 'checkbox',
-                'name' => 'categories[]',
-                'value' => $category->slug,
+                'name' => "categories[$category->slug]",
+                'value' => 1,
             ];
 
-
-            if (in_array($category->slug, $this->settings['categories'] ?? [])) {
+            $cats   = $this->settings['categories'] ?? [];
+            if (isset($cats[$category->slug])) {
                 $attributes['checked'] = 'checked';
             }
 
@@ -174,7 +174,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
         $dir            = wp_upload_dir()['basedir'];
         $files          = array_merge(glob($dir . '/*'), glob($dir . '/private/*'));
         $dirs           = array_filter($files, function ($file) {
-            if (is_dir($file) && !in_array(basename($file), ['form_uploads', 'account_statements', 'profile_pictures', 'visa_uploads'])) {
+            if (is_dir($file) && !isset(['form_uploads' => 1, 'account_statements' => 1, 'profile_pictures' => 1, 'visa_uploads' => 1][basename($file)])) {
                 return true;
             }
             return false;
@@ -200,11 +200,11 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                 $path    = $matches[1];
             }
 
-            if (in_array($path, $processed) || in_array(str_replace(' . ' . $ext, '', $path), $processed)) {
+            if (isset($processed[$path]) || isset($processed[str_replace(' . ' . $ext, '', $path)], $processed)) {
                 continue;
             }
 
-            $processed[]    = $path;
+            $processed[$path] = 1;
 
             // check if url shows up anywhere in post content
             $query = new \WP_Query(array('s' => str_replace(ABSPATH, '', $path)));

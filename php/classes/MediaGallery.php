@@ -20,7 +20,7 @@ class MediaGallery
     public $backgroundColor;
     public $style;
 
-    public function __construct($types = ['image', 'audio', 'video'], $amount = 3, $cats = [], $rand = true, $page = 1, $search = '', $backgroundColor = '#FFFFFF', $gradient = false)
+    public function __construct($types = [], $amount = 3, $cats = [], $rand = true, $page = 1, $search = '', $backgroundColor = '#FFFFFF', $gradient = false)
     {
         global $wp_query;
 
@@ -31,13 +31,13 @@ class MediaGallery
         if (empty($types)) {
             $this->types        = ['image', 'audio', 'video'];
         }
-        if (isset($_GET['type']) && in_array($_GET['type'], ['image', 'audio', 'video'])) {
+        if (isset($_GET['type']) && isset(['image' => 1, 'audio' => 1, 'video' => 1][$_GET['type']])) {
             $this->types    = [$_GET['type']];
         }
         foreach ($allMimes as $mime) {
             $type               = explode('/', $mime)[0];
             if (in_array($type, $this->types)) {
-                $this->acceptedMimes[]  = $mime;
+                $this->acceptedMimes[$mime] = $mime;
             }
         }
         $this->amount           = $amount;
@@ -343,8 +343,8 @@ class MediaGallery
         $acceptedMimes     = [];
         foreach ($allMimes as $mime) {
             $type   = explode('/', $mime)[0];
-            if (in_array($type, $this->acceptedMimes)) {
-                $acceptedMimes[]   = $mime;
+            if (isset($this->acceptedMimes[$type])) {
+                $acceptedMimes[$mime]   = $mime;
             }
         }
 

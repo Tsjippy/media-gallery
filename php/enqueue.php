@@ -9,11 +9,11 @@ function afterInsertPost($postId, $post)
 {
     if (has_shortcode($post->post_content, 'mediagallery')) {
 
-        $pages  = SETTINGS['mediagallery-pages'] ?? false;
+        $pages           = SETTINGS['mediagallery-pages'] ?? false;
 
-        $pages[]  = $postId;
+        $pages[$postId]  = $postId;
 
-        $settings   = SETTINGS;
+        $settings        = SETTINGS;
         $settings['mediagallery-pages'] = $pages;
 
         update_option('tsjippy_mediagallery_settings', $settings);
@@ -24,9 +24,8 @@ add_action('wp_trash_post', __NAMESPACE__ . '\trashPost');
 function trashPost($postId)
 {
     $pages  = SETTINGS['mediagallery-pages'] ?? false;
-    $index  = array_search($postId, $pages);
-    if ($index) {
-        unset($pages[$index]);
+    if (isset($pages[$postId])) {
+        unset($pages[$postId]);
 
         $settings   = SETTINGS;
         $settings['mediagallery-pages'] = $pages;

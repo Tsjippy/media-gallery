@@ -26,7 +26,7 @@ function addAttachment($postId)
     $post   = get_post($postId);
     $type   = explode('/', $post->post_mime_type)[0];
 
-    if (in_array($type, ['audio', 'video'])) {
+    if (isset(['audio' => 1, 'video' => 1][$type])) {
         update_metadata('post',  $post->ID, 'gallery_visibility', 'show');
     }
 }
