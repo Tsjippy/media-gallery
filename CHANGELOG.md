@@ -9,6 +9,7 @@
 - replaced in_array with isset
 
 ### Fixed
+- save settings
 
 ### Updated
 
