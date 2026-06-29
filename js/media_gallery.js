@@ -317,7 +317,7 @@ document.addEventListener("click", async (ev) => {
     catChanged(target);
   } else if ((target.id = "category-options")) {
     target
-      .closest(".mediagallery-wrapper")
+      .closest(".media-gallery-wrapper")
       .querySelector(".media-categories")
       .classList.toggle("hidden");
   } else {

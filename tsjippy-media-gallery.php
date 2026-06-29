@@ -44,21 +44,21 @@ register_activation_hook(__FILE__, function () {
         require_once(__DIR__  . '/shared-functionality/loader.php');
     }
 
-    $postId        = \TSJIPPY\ADMIN\createDefaultPage('Media Gallery', '[tsjippy_mediagallery]');
+    $postId     = \TSJIPPY\ADMIN\createDefaultPage('Media Gallery', '[tsjippy_mediagallery]');
 
-    $pages      = SETTINGS['mediagallery-pages'] ?? [];
+    $pages      = SETTINGS['pages'] ?? [];
 
-    $pages[]    = $postId;
+    $pages[$postId]    = $postId;
 
     $settings   = SETTINGS;
-    $settings['mediagallery-pages'] = $pages;
+    $settings['pages'] = $pages;
 
-    update_option('tsjippy_mediagallery_settings', $settings);
+    update_option('tsjippy_media-gallery_settings', $settings);
 });
 
 // run on deactivation
 register_deactivation_hook(__FILE__, function () {
-    foreach (SETTINGS['mediagallery-pages'] ?? [] as $page) {
+    foreach (SETTINGS['pages'] ?? [] as $page) {
         // Remove the auto created page
         wp_delete_post($page, true);
     }

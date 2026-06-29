@@ -13,7 +13,7 @@ function blockRestApiInit()
         '/show',
         array(
             'methods'                 => 'POST',
-            'callback'                 => __NAMESPACE__ . '\displayMediaGallery',
+            'callback'                => __NAMESPACE__ . '\displayMediaGallery',
             'permission_callback'     => '__return_true',    // Allow non-logged in users to access this endpoint
         )
     );

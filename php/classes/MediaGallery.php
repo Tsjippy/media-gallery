@@ -238,7 +238,7 @@ class MediaGallery
         $categories = apply_filters('tsjippy-media-gallery-categories', $categories);
 
     ?>
-        <div class='mediagallery-wrapper' style='<?php echo esc_attr($this->style); ?>'>
+        <div class='media-gallery-wrapper' style='<?php echo esc_attr($this->style); ?>'>
             <h4>Media gallery options</h4>
             <div class='mediabuttons'>
                 <input type='hidden' class='no-reset' id='paged' value=1>
