@@ -12,7 +12,7 @@ namespace TSJIPPY\MEDIAGALLERY;
  * Requires PHP:         8.3
  * Tested up to:         7.0
  * Plugin URI:            https://github.com/Tsjippy/mediagallery
- * Tested:                6.9
+ * Tested:               7.0
  * TextDomain:            tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
@@ -54,6 +54,10 @@ register_activation_hook(__FILE__, function () {
     $settings['pages'] = $pages;
 
     update_option('tsjippy_media-gallery_settings', $settings);
+
+    if(function_exists('TSJIPPY\activate')){
+        \TSJIPPY\activate();
+    }
 });
 
 // run on deactivation
