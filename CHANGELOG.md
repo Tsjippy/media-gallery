@@ -10,6 +10,7 @@
 
 ### Fixed
 - save settings
+- missing echo call
 
 ### Updated
 
