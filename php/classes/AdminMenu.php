@@ -271,7 +271,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             $count    = count($orphans);
             ?>
             <h1>
-                Orphan media (<?php esc_attr($count);?>)
+                Orphan media (<?php echo esc_attr($count);?>)
             </h1>
 
             <form method='post' style='margin-bottom:10px;'>
@@ -289,7 +289,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     if (@is_array(getimagesize($orphan))) {
                         ?>
                         <a href='<?php echo esc_url($url);?>'>
-                            <img src='<?php echo esc_url($url);?>' alt='$name' width='100' height='100' title='<?php esc_attr($orphan);?>' loading='lazy'>
+                            <img src='<?php echo esc_url($url);?>' alt='$name' width='100' height='100' title='<?php echo esc_attr($orphan);?>' loading='lazy'>
                         </a>
                         <span>
                             <?php echo esc_html(basename($orphan));?>
@@ -345,7 +345,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                             if ($index == 0) {
                                 $rowspan    = count($data);
                                 ?>
-                                <td rowspan='<?php esc_attr($rowspan);?>' style='max-width: 300px;'>
+                                <td rowspan='<?php echo esc_attr($rowspan);?>' style='max-width: 300px;'>
                                     <?php echo esc_html($html);?>
                                 </td>
                                 <?php
@@ -355,7 +355,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                             foreach ($table as $value) {
                                 ?>
                                 <td>
-                                    <?php esc_html($value);?>
+                                    <?php echo esc_html($value);?>
                                 </td>
                                 <?php
                             }
