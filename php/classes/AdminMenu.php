@@ -81,7 +81,9 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
     {
         ob_start();
 ?>
-        <h4>Duplicate files</h4>
+        <h4>
+            Duplicate files
+        </h4>
 
         <p>
             Scan and remove duplicate files in the uploads and uploads/private folder.
@@ -119,7 +121,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     Succesfully removed the following files:<br>
                     <?php
                     foreach ($removed as $path) {
-                        echo esc_html($path)."<br>";
+                        echo esc_html($path) . "<br>";
                     }
                     ?>
                 </div>
@@ -271,7 +273,7 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
             $count    = count($orphans);
             ?>
             <h1>
-                Orphan media (<?php echo esc_attr($count);?>)
+                Orphan media (<?php echo esc_attr($count); ?>)
             </h1>
 
             <form method='post' style='margin-bottom:10px;'>
@@ -287,20 +289,20 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                     $url    = TSJIPPY\pathToUrl($orphan);
                     $name    = basename($orphan);
                     if (@is_array(getimagesize($orphan))) {
-                        ?>
-                        <a href='<?php echo esc_url($url);?>'>
-                            <img src='<?php echo esc_url($url);?>' alt='$name' width='100' height='100' title='<?php echo esc_attr($orphan);?>' loading='lazy'>
+                    ?>
+                        <a href='<?php echo esc_url($url); ?>'>
+                            <img src='<?php echo esc_url($url); ?>' alt='$name' width='100' height='100' title='<?php echo esc_attr($orphan); ?>' loading='lazy'>
                         </a>
                         <span>
-                            <?php echo esc_html(basename($orphan));?>
+                            <?php echo esc_html(basename($orphan)); ?>
                         </span>
-                        <?php
+                    <?php
                     } else {
-                        ?>
-                        <a href='<?php echo esc_url($url);?>' title='<?php echo esc_attr($orphan);?>'>
-                            <?php echo esc_html($name);?>
+                    ?>
+                        <a href='<?php echo esc_url($url); ?>' title='<?php echo esc_attr($orphan); ?>'>
+                            <?php echo esc_html($name); ?>
                         </a>
-                        <?php
+                    <?php
                     }
                     ?>
 
@@ -339,40 +341,40 @@ class AdminMenu extends \TSJIPPY\ADMIN\SubAdminMenu
                         }
 
                         foreach ($data as $index => $table) {
-                            ?>
+                    ?>
                             <tr>
                                 <?php
-                            if ($index == 0) {
-                                $rowspan    = count($data);
+                                if ($index == 0) {
+                                    $rowspan    = count($data);
                                 ?>
-                                <td rowspan='<?php echo esc_attr($rowspan);?>' style='max-width: 300px;'>
-                                    <?php echo esc_html($html);?>
-                                </td>
+                                    <td rowspan='<?php echo esc_attr($rowspan); ?>' style='max-width: 300px;'>
+                                        <?php echo esc_html($html); ?>
+                                    </td>
                                 <?php
-                            }
+                                }
 
-                            // data
-                            foreach ($table as $value) {
+                                // data
+                                foreach ($table as $value) {
+                                ?>
+                                    <td>
+                                        <?php echo esc_html($value); ?>
+                                    </td>
+                                <?php
+                                }
+
+                                // actions
                                 ?>
                                 <td>
-                                    <?php echo esc_html($value);?>
+                                    <form method='post' style='margin-bottom:10px;'>
+                                        <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
+                                        <input type='hidden' class='no-reset' name='table' value='<?php echo esc_attr($table['table']); ?>'>
+                                        <button class='button' name='ignore' value='ignore'>Ignore this table</button>
+                                    </form>
+                                    <form method='post'>
+                                        <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
+                                        <input type='submit' class='button' name='used' value='Mark as used'>
+                                    </form>
                                 </td>
-                                <?php
-                            }
-
-                            // actions
-                            ?>
-                            <td>
-                                <form method='post' style='margin-bottom:10px;'>
-                                    <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
-                                    <input type='hidden' class='no-reset' name='table' value='<?php echo esc_attr($table['table']); ?>'>
-                                    <button class='button' name='ignore' value='ignore'>Ignore this table</button>
-                                </form>
-                                <form method='post'>
-                                    <input type='hidden' class='no-reset' name='id' value='<?php echo esc_attr($attachmentId); ?>'>
-                                    <input type='submit' class='button' name='used' value='Mark as used'>
-                                </form>
-                            </td>
                             </tr>
                     <?php
                         }
