@@ -7,6 +7,7 @@
 - add default pages when not present
 
 ### Fixed
+- plugin settings key
 
 ### Updated
 
