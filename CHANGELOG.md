@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.5] - 2026-07-03
+
+
+### Changed
 - add default pages when not present
 
 ### Fixed
 - plugin settings key
-
-### Updated
 
 ## [10.3.4] - 2026-07-02
 
