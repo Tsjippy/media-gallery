@@ -211,8 +211,9 @@ class MediaGallery
         }
 
         $url            = '';
+        //TO DO
         if (defined('TSJIPPY\FRONTENDPOSTING\SETTINGS')) {
-            $url   = get_permalink(TSJIPPY\FRONTENDPOSTING\SETTINGS['front-end-post-page'] ?? '');
+            $url   = get_permalink(TSJIPPY\FRONTENDPOSTING\SETTINGS['front-end-post-page'] ?? TSJIPPY\FRONTENDPOSTING\createDefaultPages('front-end-post-page'));
 
             if (!$url) {
                 $url    = '';
