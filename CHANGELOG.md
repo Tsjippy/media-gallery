@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- fixed media gallery block
 
 ### Fixed
 
