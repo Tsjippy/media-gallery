@@ -20,6 +20,11 @@ class MediaGallery
     public $backgroundColor;
     public $style;
 
+    /**
+     * Constructor
+     * 
+     * 
+     */
     public function __construct($types = [], $amount = 3, $cats = [], $rand = true, $page = 1, $search = '', $backgroundColor = '#FFFFFF', $gradient = false)
     {
         global $wp_query;
@@ -203,10 +208,12 @@ class MediaGallery
     /**
      * Shows a filterable mediagalery
      * People can load more media as they desire
+     * 
+     * @param   bool    $echo   Wheter to print to screen or return html. Default false
      */
     public function filterableMediaGallery($echo)
     {
-        if ($echo) {
+        if (!$echo) {
             ob_start();
         }
 
@@ -221,10 +228,10 @@ class MediaGallery
         }
 
         $categories    = get_categories(array(
-            'orderby'         => 'name',
-            'order'           => 'ASC',
-            'taxonomy'        => 'attachment_cat',
-            'hide_empty'     => false,
+            'orderby'    => 'name',
+            'order'      => 'ASC',
+            'taxonomy'   => 'attachment_cat',
+            'hide_empty' => false,
         ));
 
         $shouldSkip     = SETTINGS['categories'] ?? [];
@@ -266,15 +273,15 @@ class MediaGallery
                     <option value='100'>100</option>
                 </select>
                 <label>
-                    <input type='checkbox' name='media-type' class='media-type-selector' value='image'>
+                    <input type='checkbox' name='media-type' class='media-type-selector' value='image' <?php if(in_array('image', $this->types)) echo 'checked';?>>
                     Pictures
                 </label>
                 <label>
-                    <input type='checkbox' name='media-type' class='media-type-selector' value='video'>
+                    <input type='checkbox' name='media-type' class='media-type-selector' value='video' <?php if(in_array('video', $this->types)) echo 'checked';?>>
                     Videos
                 </label>
                 <label>
-                    <input type='checkbox' name='media-type' class='media-type-selector' value='audio'>
+                    <input type='checkbox' name='media-type' class='media-type-selector' value='audio' <?php if(in_array('audio', $this->types)) echo 'checked';?>>
                     Audio
                 </label>
                 <input class="searchtext" type="text" placeholder="Search.. ">
@@ -284,14 +291,16 @@ class MediaGallery
             </div>
 
             <div class='media-categories hidden'>
-                <div>Categories:<br></div>
+                <div>
+                    Categories:<br>
+                </div>
                 <?php
                 foreach ($categories as $cat) {
                     $checked    = '';
                     if (in_array($cat->term_id, $this->cats)) {
                         $checked    = 'checked';
                     }
-                ?>
+                    ?>
                     <label>
                         <input type='checkbox' name='media-category' class='media-cat-selector' value='<?php echo esc_attr($cat->slug); ?>' <?php echo esc_attr($checked); ?>>
                         <?php echo esc_attr($cat->name); ?>
@@ -304,7 +313,9 @@ class MediaGallery
             <div id="media-loader-wrapper" class="hidden">
                 <<div class="loader-image-trigger">
             </div>
-            <div>Loading more...</div>
+            <div>
+                Loading more...
+            </div>
         </div>
 
         <div class="mediawrapper">
@@ -318,216 +329,218 @@ class MediaGallery
 
         <?php
         if ($count == $this->amount) {
-        ?>
+            ?>
             <div style='text-align:center; margin-top:20px;'>
                 <button id='loadmoremedia' type='button' class='button'>
                     Load more
                 </button>
             </div><?php
-                }
+        }
 
-                return ob_get_clean();
+        if (!$echo) {
+           return ob_get_clean();
+        }
+    }
+
+    /**
+     * Load more media items
+     *
+     * @param   int     $itemsToSkip    The amount of items to skip. Default false for none
+     * @param   int     $startIndex     The index to start loading from. Default 0
+     * @param   bool    $echo           WHether to print to screen
+     *
+     * @return  string                  The html
+     */
+    public function loadMediaHTML($itemsToSkip = false, $startIndex = 0, $echo = false)
+    {
+        $canEdit           = in_array('editor', wp_get_current_user()->roles);
+        $allMimes          = get_allowed_mime_types();
+        $acceptedMimes     = [];
+        foreach ($allMimes as $mime) {
+            $type   = explode('/', $mime)[0];
+            if (isset($this->acceptedMimes[$type])) {
+                $acceptedMimes[$mime]   = $mime;
+            }
+        }
+
+        if (empty($this->posts)) {
+            return false;
+        }
+
+        if (!$echo) {
+            ob_start();
+        }
+
+        $i  = ($this->page - 1) * $this->amount - 1;
+        while ($this->wpQuery->have_posts()) : $this->wpQuery->the_post();
+            $i++;
+
+            //skip if needed
+            if (is_numeric($itemsToSkip) && $i < $itemsToSkip) {
+                continue;
             }
 
-            /**
-             * Load more media items
-             *
-             * @param   int     $itemsToSkip    The amount of items to skip. Default false for none
-             * @param   int     $startIndex     The index to start loading from. Default 0
-             * @param   bool    $echo           WHether to print to screen
-             *
-             * @return  string                  The html
-             */
-            public function loadMediaHTML($itemsToSkip = false, $startIndex = 0, $echo = false)
-            {
-                $canEdit           = in_array('editor', wp_get_current_user()->roles);
-                $allMimes          = get_allowed_mime_types();
-                $acceptedMimes     = [];
-                foreach ($allMimes as $mime) {
-                    $type   = explode('/', $mime)[0];
-                    if (isset($this->acceptedMimes[$type])) {
-                        $acceptedMimes[$mime]   = $mime;
-                    }
-                }
+            $id             = get_the_ID();
+            $url            = wp_get_attachment_thumb_url($id);
+            $iconUrl        = $url;
+            $title          = get_the_title();
+            $mime           = get_post_mime_type();
+            $type           = explode('/', $mime)[0];
+            $description    = ucfirst(get_the_content());
+            $attachmentUrl  = get_attachment_link();
 
-                if (empty($this->posts)) {
-                    return false;
-                }
-
-                if (!$echo) {
-                    ob_start();
-                }
-
-                $i  = ($this->page - 1) * $this->amount - 1;
-                while ($this->wpQuery->have_posts()) : $this->wpQuery->the_post();
-                    $i++;
-
-                    //skip if needed
-                    if (is_numeric($itemsToSkip) && $i < $itemsToSkip) {
-                        continue;
-                    }
-
-                    $id             = get_the_ID();
-                    $url            = wp_get_attachment_thumb_url($id);
-                    $iconUrl        = $url;
-                    $title          = get_the_title();
-                    $mime           = get_post_mime_type();
-                    $type           = explode('/', $mime)[0];
-                    $description    = ucfirst(get_the_content());
-                    $attachmentUrl  = get_attachment_link();
-
-                    /*
+            /*
             **** PREVIEW GRID ****
             */
 
-                    // Replace icon with VIMEO icon
-                    if ($type == 'video') {
-                        $iconUrl       = apply_filters('wp_mime_type_icon', TSJIPPY\SITEURL . "/wp-includes/images/media/video.png", get_post_mime_type(), $id);
-                    } elseif ($type == 'audio') {
-                        $iconUrl       = TSJIPPY\SITEURL . "/wp-includes/images/media/audio.png";
-                    } else {
-                        //skip if not existing, and send e-mail
-                        $path   = get_attached_file($id);
-                        if (!file_exists($path)) {
-                            $this->amount -= 1;
-                            TSJIPPY\printArray("Check file with id $id");
-                            wp_mail(get_option('admin_email'), 'Missing file', "Hi Admin,<br><br>A file is registered in the media gallery but does not exist: $path");
-                            continue;
-                        }
-                    }
-
-                    $index  = $startIndex + $i;
-                    ?>
-            <div class='cell <?php echo esc_attr($type); ?>' data-index='<?php echo esc_attr($index); ?>'>
-                <div class='image-wrapper'>
-                    <img src='<?php echo esc_url($iconUrl); ?>' alt='<?php echo esc_attr($title); ?>' loading='lazy' class='media-item' width='150' height='120' title='<?php echo esc_attr($title); ?>'>
-                </div>
-                <?php
-                    if (!empty($description)) {
-                ?>
-                    <div class='media-description hidden'>
-                        <?php echo wp_kses_post($description); ?>
-                    </div>
-                <?php
-                    }
-                ?>
-            </div>
-            <?php
-
-                    /*
-            **** FULL SCREEN VIEWS ****
-            */
-            ?>
-            <div class="large-image <?php echo esc_attr($type); ?> hidden" data-index='<?php echo esc_attr($index); ?>'>
-                <?php
-                    //Only show back button if not the first item
-                    if ($i > 1) {
-                ?>
-                    <a href="#" class="previous-button">
-                        &#8249;
-                    </a>
-                <?php
-                    }
-                ?>
-
-                <?php TSJIPPY\addCloseButtton(); ?>
-
-                <!-- Expanded media -->
-                <div class='fullscreen-media-wrapper'>
-                    <?php
-                    // Normal media
-                    if ($type == 'audio') {
-                        // Start Audio tag
-                        $mediaHtml  = "<audio loop='loop' controls='controls'>";
-                        $mediaHtml  .=  "<source src='$url'/>";
-                        $mediaHtml  .=  '</audio>';
-                    } elseif ($type == 'video') {
-                        $mediaHtml  =  "<video width='320' height='240' controls>";
-                        $mediaHtml  .=  "<source src='$url' type='$mime'>";
-                        $mediaHtml  .=  '</video>';
-                    } else {
-                        list($width, $height) = getimagesize(TSJIPPY\urlToPath($url));
-                        $ratio  = $height / $width;
-
-                        // Get the url to the full size image
-                        $fullUrl    = wp_get_attachment_url($id);
-                        //Center the image vertically
-                        $mediaHtml  =  "<a href='$fullUrl' class='image'><img src='$url' loading='lazy' with='100%' height='100vh' style='top: max(0px, calc(50vh - 50vw * $ratio));' data-full='$fullUrl'></a>";
-                    }
-
-                    echo wp_kses_post(apply_filters('tsjippy-media-gallery-item-html', $mediaHtml, $type, $id));
-                    ?>
-                </div>
-
-                <?php
-                    // if (empty($videoUrl)) {
-                    //only show image text on images
-                ?>
-                <div id="imgtext">
-                    <div class="image-title-wrapper">
-                        <?php
-                        echo esc_attr($title);
-                        ?>
-                    </div>
-                </div>
-                <?php
-                    //}
-
-                    if ($i != $this->total - 1) {
-                ?>
-                    <a href="#" class="next-button">
-                        &#8250;
-                    </a>
-                <?php
-                    }
-                ?>
-
-                <div class="button-wrapper">
-                    <?php
-                    if ($canEdit) {
-                        echo wp_kses_post(apply_filters('tsjippy-media-gallery-edit-link', "<a href='" . TSJIPPY\SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id));
-                    }
-
-                    if (!empty($description)) {
-                    ?>
-                        <button type='button' class='button small description' data-description='<?php echo base64_encode($description); ?>' title='<?php echo wp_strip_all_tags($title); ?>'>
-                            Description
-                        </button>
-                    <?php
-                    }
-
-                    ?>
-                    <a class='button small' href="<?php echo esc_url($attachmentUrl); ?>">
-                        Link
-                    </a>
-                    <?php
-
-                    $url            = apply_filters('tsjippy-media-gallery-download-url', $url, $id);
-
-                    if (file_exists(TSJIPPY\urlToPath($url))) {
-                        $fileName   = apply_filters('tsjippy-media-gallery-download-filename', '', $type, $id);
-                    ?>
-                        <button type="button" class="button small download">
-                            Download
-                            <a href='<?php echo esc_url($url); ?>' class='hidden' download="<?php echo esc_attr($fileName); ?>">
-                                Download
-                            </a>
-                        </button>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </div>
-
-<?php
-                endwhile;
-
-                wp_reset_postdata();
-
-                if ($echo) {
-                    return $i;
-                } else {
-                    return ob_get_clean();
+            // Replace icon with VIMEO icon
+            if ($type == 'video') {
+                $iconUrl       = apply_filters('wp_mime_type_icon', TSJIPPY\SITEURL . "/wp-includes/images/media/video.png", get_post_mime_type(), $id);
+            } elseif ($type == 'audio') {
+                $iconUrl       = TSJIPPY\SITEURL . "/wp-includes/images/media/audio.png";
+            } else {
+                //skip if not existing, and send e-mail
+                $path   = get_attached_file($id);
+                if (!file_exists($path)) {
+                    $this->amount -= 1;
+                    TSJIPPY\printArray("Check file with id $id");
+                    wp_mail(get_option('admin_email'), 'Missing file', "Hi Admin,<br><br>A file is registered in the media gallery but does not exist: $path");
+                    continue;
                 }
             }
+
+            $index  = $startIndex + $i;
+            ?>
+    <div class='cell <?php echo esc_attr($type); ?>' data-index='<?php echo esc_attr($index); ?>'>
+        <div class='image-wrapper'>
+            <img src='<?php echo esc_url($iconUrl); ?>' alt='<?php echo esc_attr($title); ?>' loading='lazy' class='media-item' width='150' height='120' title='<?php echo esc_attr($title); ?>'>
+        </div>
+        <?php
+            if (!empty($description)) {
+        ?>
+            <div class='media-description hidden'>
+                <?php echo wp_kses_post($description); ?>
+            </div>
+        <?php
+            }
+        ?>
+    </div>
+    <?php
+
+            /*
+        **** FULL SCREEN VIEWS ****
+        */
+        ?>
+        <div class="large-image <?php echo esc_attr($type); ?> hidden" data-index='<?php echo esc_attr($index); ?>'>
+            <?php
+                //Only show back button if not the first item
+                if ($i > 1) {
+            ?>
+                <a href="#" class="previous-button">
+                    &#8249;
+                </a>
+            <?php
+                }
+            ?>
+
+            <?php TSJIPPY\addCloseButtton(); ?>
+
+            <!-- Expanded media -->
+            <div class='fullscreen-media-wrapper'>
+                <?php
+                // Normal media
+                if ($type == 'audio') {
+                    // Start Audio tag
+                    $mediaHtml  = "<audio loop='loop' controls='controls'>";
+                    $mediaHtml  .=  "<source src='$url'/>";
+                    $mediaHtml  .=  '</audio>';
+                } elseif ($type == 'video') {
+                    $mediaHtml  =  "<video width='320' height='240' controls>";
+                    $mediaHtml  .=  "<source src='$url' type='$mime'>";
+                    $mediaHtml  .=  '</video>';
+                } else {
+                    list($width, $height) = getimagesize(TSJIPPY\urlToPath($url));
+                    $ratio  = $height / $width;
+
+                    // Get the url to the full size image
+                    $fullUrl    = wp_get_attachment_url($id);
+                    //Center the image vertically
+                    $mediaHtml  =  "<a href='$fullUrl' class='image'><img src='$url' loading='lazy' with='100%' height='100vh' style='top: max(0px, calc(50vh - 50vw * $ratio));' data-full='$fullUrl'></a>";
+                }
+
+                echo wp_kses_post(apply_filters('tsjippy-media-gallery-item-html', $mediaHtml, $type, $id));
+                ?>
+            </div>
+
+            <?php
+                // if (empty($videoUrl)) {
+                //only show image text on images
+            ?>
+            <div id="imgtext">
+                <div class="image-title-wrapper">
+                    <?php
+                    echo esc_attr($title);
+                    ?>
+                </div>
+            </div>
+            <?php
+                //}
+
+                if ($i != $this->total - 1) {
+            ?>
+                <a href="#" class="next-button">
+                    &#8250;
+                </a>
+            <?php
+                }
+            ?>
+
+            <div class="button-wrapper">
+                <?php
+                if ($canEdit) {
+                    echo wp_kses_post(apply_filters('tsjippy-media-gallery-edit-link', "<a href='" . TSJIPPY\SITEURL . "/wp-admin/upload.php?item=$id' class='button editmedia'>Edit</a>", $id));
+                }
+
+                if (!empty($description)) {
+                ?>
+                    <button type='button' class='button small description' data-description='<?php echo base64_encode($description); ?>' title='<?php echo wp_strip_all_tags($title); ?>'>
+                        Description
+                    </button>
+                <?php
+                }
+
+                ?>
+                <a class='button small' href="<?php echo esc_url($attachmentUrl); ?>">
+                    Link
+                </a>
+                <?php
+
+                $url            = apply_filters('tsjippy-media-gallery-download-url', $url, $id);
+
+                if (file_exists(TSJIPPY\urlToPath($url))) {
+                    $fileName   = apply_filters('tsjippy-media-gallery-download-filename', '', $type, $id);
+                ?>
+                    <button type="button" class="button small download">
+                        Download
+                        <a href='<?php echo esc_url($url); ?>' class='hidden' download="<?php echo esc_attr($fileName); ?>">
+                            Download
+                        </a>
+                    </button>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+
+    <?php
+        endwhile;
+
+        wp_reset_postdata();
+
+        if ($echo) {
+            return $i;
+        } else {
+            return ob_get_clean();
         }
+    }
+}

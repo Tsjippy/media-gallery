@@ -2,6 +2,8 @@ import { __ } from "@wordpress/i18n";
 import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
 import apiFetch from "@wordpress/api-fetch";
 import { useState, useEffect } from "@wordpress/element";
+import { ServerSideRender, useServerSideRender } from '@wordpress/server-side-render';
+import { RawHTML } from '@wordpress/element';
 import {
   Panel,
   PanelBody,
@@ -9,6 +11,7 @@ import {
   CheckboxControl,
   Spinner,
   ColorPicker,
+  __experimentalNumberControl as NumberControl
 } from "@wordpress/components";
 
 // Hide the gutenberg top bar when full screen
@@ -28,82 +31,109 @@ document.addEventListener("click", async (ev) => {
   }
 });
 
+var availableCats = [];
+apiFetch({ path: "/wp/v2/attachment_cat" }).then( res => availableCats = res);
+
 const Edit = ({ attributes, setAttributes }) => {
-  const { categories, color } = attributes;
+  const { categories, color, types, amount } = attributes;
 
-  const [html, setHtml] = useState(
-    <>
-      Loading <Spinner />
-    </>,
-  );
+  const onMediaTypeSelected = function (checked, type) {
+    if (checked) {
+      types.push(type)
+    } else {
+      types = types.filter((val) => val != type);
+    }
 
-  const [cats, setCats] = useState(<Spinner />);
-
-  const [fetchedCats, storeFetchedCats] = useState(<Spinner />);
+    setAttributes({ types: [...types] });
+  };
 
   const onCatChanged = function (checked, id) {
-    let copy;
-
-    if (checked && !categories.includes(id)) {
-      copy = [...categories, id];
+    let newCats = [...categories];
+    if (checked) {
+      newCats.push(id);
     } else if (!checked) {
-      copy = categories.filter((val) => val != id);
+      newCats = newCats.filter((val) => val != id);
     }
 
-    setAttributes({ categories: copy });
+    setAttributes({ categories: newCats });
   };
 
-  const updatecolor = function (color) {
-    setAttributes({ color: color });
-  };
+  const buildCatChecks = () => {
+     return availableCats.map((c) => (
+      <CheckboxControl
+        label    = {c.name}
+        onChange = {(checked) => onCatChanged(checked, c.id)}
+        checked  = {categories.includes(c.id)}
+        key      = {c.id}
+      />
+    ));
+  }
 
-  useEffect(() => {
-    async function buildCatChecks() {
-      setHtml(
-        <>
-          Loading <Spinner />
-        </>,
-      );
+  const getServerSideRenderedContent = ( ) => {
+    const { content, status, error } = useServerSideRender( {
+        block: "tsjippy/media-gallery",
+        attributes: attributes,
+        urlQueryArgs: { context: 'edit' } // Optional custom query arguments
+    } );
 
-      if (React.isValidElement(fetchedCats)) {
-        return;
-      }
+    const blockProps = useBlockProps();
 
-      setCats(
-        fetchedCats.map((c) => (
-          <CheckboxControl
-            label={c.name}
-            onChange={(checked) => onCatChanged(checked, c.id)}
-            checked={categories.includes(c.id)}
-            key={c.id}
-          />
-        )),
-      );
+    let html;
 
-      const response = await apiFetch({
-        path: tsjippy.restApiPrefix + "/mediagallery/show",
-        method: "POST",
-        data: { categories: categories, color: color },
-      });
-      setHtml(wp.element.RawHTML({ children: response }));
+    if ( status === 'loading' ) {
+        html = "Loading...";
     }
-    buildCatChecks();
-  }, [fetchedCats, attributes.categories]);
 
-  useEffect(() => {
-    async function getCats() {
-      let fetchedCategories = await apiFetch({ path: "/wp/v2/attachment_cat" });
-      fetchedCategories.unshift({ name: "All", id: -1 });
-
-      storeFetchedCats(fetchedCategories);
+    else if ( status === 'error' ) {
+        html = `Error: ${ error }`;
     }
-    getCats();
-  }, []);
+
+    else{
+      html  = <RawHTML>{ content }</RawHTML>; 
+    }
+
+    return <div {...blockProps}>
+      { html }
+    </div>;
+  }
 
   return (
     <>
       <InspectorControls>
         <Panel>
+          <PanelBody title="Media Types" initialOpen={true}>
+            <PanelRow>
+              Select the media types
+            </PanelRow>
+            <CheckboxControl
+              label    = 'Audio'
+              onChange = {(checked) => onMediaTypeSelected(checked, 'audio')}
+              checked  = {types.includes('audio')}
+              key      = 'audio'
+            />
+            <CheckboxControl
+              label    = 'Image'
+              onChange = {(checked) => onMediaTypeSelected(checked, 'image')}
+              checked  = {types.includes('image')}
+              key      = 'image'
+            />
+            <CheckboxControl
+              label    = 'Video'
+              onChange = {(checked) => onMediaTypeSelected(checked, 'video')}
+              checked  = {types.includes('video')}
+              key      = 'video'
+            />
+          </PanelBody>
+          <PanelBody title="Amount Per Page" initialOpen={false}>
+            <PanelRow>
+              <NumberControl
+                __next40pxDefaultSize
+                onChange={ value => setAttributes({ amount: value }) }
+                shiftStep={ 5 }
+                value={ attributes.amount }
+              />
+            </PanelRow>
+          </PanelBody>
           <PanelBody title="Background color" initialOpen={false}>
             <PanelRow>
               <ColorPicker
@@ -114,13 +144,15 @@ const Edit = ({ attributes, setAttributes }) => {
               />
             </PanelRow>
           </PanelBody>
-          <PanelBody title="Categories" initialOpen={true}>
-            <PanelRow>Select a category you want to include media for</PanelRow>
-            {cats}
+          <PanelBody title="Categories" initialOpen={false}>
+            <PanelRow>
+              Select a category you want to include media for
+            </PanelRow>
+            { buildCatChecks() }
           </PanelBody>
         </Panel>
       </InspectorControls>
-      <div {...useBlockProps()}>{html}</div>
+      { getServerSideRenderedContent() }
     </>
   );
 };

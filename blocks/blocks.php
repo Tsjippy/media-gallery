@@ -11,18 +11,30 @@ function initBlocks()
         __DIR__ . '/media-gallery/build',
         array(
             'render_callback' => function ($args) {
-                $mediaGallery   = new MediaGallery([], 20, $args['categories'], false, 1, '', $args['color']);
+                $mediaGallery   = new MediaGallery($args['types'], $args['amount'], $args['categories'], false, 1, '', $args['color']);
 
                 return $mediaGallery->filterableMediaGallery(false);
             },
             'attributes'      => [
                 'color' => [
-                    'type'         => 'string',
+                    'type'       => 'string',
                     'default'    => '#FFFFFF'
                 ],
                 'categories' => [
-                    'type'         => 'array',
+                    'type'       => 'array',
                     'default'    => []
+                ],
+                'types' => [
+                    'type'       => 'array',
+                    'default'    => [
+                        'audio',
+                        'image',
+                        'video'
+                    ]
+                ],
+                'amount' => [
+                    'type'       => 'integer',
+                    'default'    => 20
                 ],
             ]
         )
