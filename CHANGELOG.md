@@ -5,6 +5,7 @@
 
 ### Changed
 - fixed media gallery block
+- removed shortcode
 
 ### Fixed
 
