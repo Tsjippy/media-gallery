@@ -11,6 +11,13 @@ use TSJIPPY;
  * @param   \WP_Post    $post       The new or updated post
  */
 add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave');
+/**
+ * Runs after a post is saved or updated
+ * 
+ * @param   \WP_Post    $post       The new or updated post
+ * @param   object      $object     FrontEndContent Instance
+ * @param   array       $request    The sanitized request data
+ */
 function afterPostSave($post)
 {
     // Add to media gallery if post type is attachment
