@@ -71,7 +71,7 @@ const Edit = ({ attributes, setAttributes }) => {
 
   const getServerSideRenderedContent = ( ) => {
     const { content, status, error } = useServerSideRender( {
-        block: "tsjippy/media-gallery",
+        block: "tsjippy-media-gallery/show",
         attributes: attributes,
         urlQueryArgs: { context: 'edit' } // Optional custom query arguments
     } );

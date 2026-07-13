@@ -1,7 +1,7 @@
 {
 	"schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "tsjippy-media-gallery/media-gallery",
+	"name": "tsjippy-media-gallery/show",
 	"version": "0.1.0",
 	"title": "Media gallery",
 	"category": "widgets",
