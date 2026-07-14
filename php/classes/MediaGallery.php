@@ -83,8 +83,7 @@ class MediaGallery
             'meta_query'      => array(
                 array(
                     'key'     => 'tsjippy_gallery_visibility',
-                    'value'   => 'show',
-                    'compare' => '=='
+                    'compare' => 'NOT EXISTS'
                 )
             )
         );
