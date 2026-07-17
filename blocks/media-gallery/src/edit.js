@@ -1,9 +1,8 @@
 import { __ } from "@wordpress/i18n";
 import { useBlockProps, InspectorControls } from "@wordpress/block-editor";
 import apiFetch from "@wordpress/api-fetch";
-import { useState, useEffect } from "@wordpress/element";
+import { useState, useEffect, RawHTML } from "@wordpress/element";
 import { ServerSideRender, useServerSideRender } from '@wordpress/server-side-render';
-import { RawHTML } from '@wordpress/element';
 import {
   Panel,
   PanelBody,
