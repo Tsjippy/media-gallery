@@ -48,7 +48,6 @@ function editAttachment($attachmentId)
 
         if ($prevVis != $visibility) {
             //update post meta
-
             if($visibility == 'hide'){
                 update_post_meta($attachmentId, 'tsjippy_gallery_visibility', $visibility);
             }else{
