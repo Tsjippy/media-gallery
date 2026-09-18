@@ -1,3 +1,7 @@
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
 async function downloadVimeoVideo(ev) {
   const vimeoUrl = ev.target
     .closest("form")
@@ -24,7 +28,7 @@ async function downloadVimeoVideo(ev) {
 
   Main.displayMessage("Download started please wait till it finishes");
 
-  let response = await FormSubmit.fetchRestApi(
+  let response = await fetchRestApi(
     "vimeo/download_to_server",
     formData,
   );

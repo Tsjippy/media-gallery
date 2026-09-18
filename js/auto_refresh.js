@@ -1,3 +1,8 @@
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Auto refresh media gallery.js loaded");
   document.querySelectorAll(".media-gallery-article").forEach((gallery) => {
@@ -29,7 +34,7 @@ let reloadMediaGallery = async function (gallery, first = false) {
     );
     formData.append("color", gallery.style.background);
     formData.append("desc", gallery.dataset.desc);
-    var response = await FormSubmit.fetchRestApi(
+    var response = await fetchRestApi(
       "media_gallery/show_media_gallery",
       formData,
       false,

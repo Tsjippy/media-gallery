@@ -45,12 +45,12 @@ function enqueueMediaGalleryScripts()
 {
     wp_register_style('tsjippy_gallery_style', TSJIPPY\pathToUrl(PLUGINPATH . 'css/media_gallery.min.css'), array(), PLUGINVERSION);
 
-    wp_register_script('tsjippy_gallery_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/media_gallery.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
-    wp_register_script('tsjippy_refresh_gallery_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/auto_refresh.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
+    wp_register_script_module('@tsjippy/gallery_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/media_gallery.min.js'), array('@tsjippy/formsubmit_script'), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/refresh_gallery_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/auto_refresh.min.js'), array('@tsjippy/formsubmit_script'), PLUGINVERSION);
 
     $pages   = SETTINGS['pages'] ?? [];
     if (is_numeric(get_the_ID()) && isset($pages[get_the_ID()])) {
         wp_enqueue_style('tsjippy_gallery_style');
-        wp_enqueue_script('tsjippy_gallery_script');
+        wp_enqueue_script_module('@tsjippy/gallery_script');
     }
 }

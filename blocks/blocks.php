@@ -53,6 +53,6 @@ function loadBlockAssets()
             TSJIPPY\VIMEO\enqueueVimeoScripts();
         }
 
-        wp_enqueue_script('tsjippy_vimeo_shortcode_script');
+        wp_enqueue_script_module('@tsjippy/vimeo_shortcode_script');
     }
 }

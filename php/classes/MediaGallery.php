@@ -66,7 +66,7 @@ class MediaGallery
         $this->getMedia();
 
         wp_enqueue_style('tsjippy_gallery_style');
-        wp_enqueue_script('tsjippy_refresh_gallery_script');
+        wp_enqueue_script_module('@tsjippy/refresh_gallery_script');
     }
 
     /**
@@ -141,7 +141,7 @@ class MediaGallery
             ob_start();
         }
 
-        wp_enqueue_script('tsjippy_page_gallery_script');
+        wp_enqueue_script_module('@tsjippy/page_gallery_script');
 
         // make sure we only try to display as many posts as available
         $amount    = min(count($this->posts), $this->amount);

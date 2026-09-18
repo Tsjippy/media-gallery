@@ -1,3 +1,8 @@
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
+
 console.log("Media galery js loaded");
 
 function showImage(index) {
@@ -40,7 +45,7 @@ async function loadMore(index, showFirst, skipAmount = 0) {
   formData.append("categories", cats);
   formData.append("startIndex", index + 1);
 
-  var response = await FormSubmit.fetchRestApi(
+  var response = await fetchRestApi(
     "media_gallery/load_more_media",
     formData,
   );
@@ -102,7 +107,7 @@ async function catChanged(target) {
   formData.append("types", types);
   formData.append("categories", cats);
 
-  var response = await FormSubmit.fetchRestApi(
+  var response = await fetchRestApi(
     "media_gallery/change_cats",
     formData,
   );
@@ -129,7 +134,7 @@ async function mediaSearch(target) {
   formData.append("types", types);
   formData.append("search", searchString);
 
-  var response = await FormSubmit.fetchRestApi(
+  var response = await fetchRestApi(
     "media_gallery/media_search",
     formData,
   );
