@@ -2,13 +2,17 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+
 async function downloadVimeoVideo(ev) {
   const vimeoUrl = ev.target
     .closest("form")
     .querySelector('[name="download-url"]').value;
 
   if (vimeoUrl == "") {
-    Main.displayMessage("Please give an url to download from", "error");
+    displayMessage("Please give an url to download from", "error");
     return;
   }
 
@@ -26,7 +30,7 @@ async function downloadVimeoVideo(ev) {
   formData.append("vimeoid", vidmeoId);
   formData.append("download-url", vimeoUrl);
 
-  Main.displayMessage("Download started please wait till it finishes");
+  displayMessage("Download started please wait till it finishes");
 
   let response = await fetchRestApi(
     "vimeo/download_to_server",
@@ -34,7 +38,7 @@ async function downloadVimeoVideo(ev) {
   );
 
   if (response) {
-    Main.displayMessage(response);
+    displayMessage(response);
     ev.target.closest("form").remove();
   } else {
     ev.target.closest("form").querySelector('[name="download-url"]').value = "";

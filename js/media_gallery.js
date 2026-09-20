@@ -2,6 +2,17 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+
+import { 
+  displayMessage 
+} from "../../tsjippy-shared-functionality/js/partials/display_message.js";
+
+import { 
+  Alert 
+} from "../../tsjippy-shared-functionality/js/partials/alert.js";
 
 console.log("Media galery js loaded");
 
@@ -54,7 +65,7 @@ async function loadMore(index, showFirst, skipAmount = 0) {
   document.getElementById("media-loader-wrapper").classList.add("hidden");
 
   if (!response) {
-    Main.displayMessage("All media are loaded", "info");
+    displayMessage("All media are loaded", "info");
   } else {
     if (button != null) {
       button.classList.remove("hidden");
@@ -85,7 +96,7 @@ async function loadMore(index, showFirst, skipAmount = 0) {
 async function catChanged(target) {
   document.querySelector(".mediawrapper").innerHTML = "";
 
-  let loader = Main.showLoader(
+  let loader = showLoader(
     document.querySelector(".mediawrapper"),
     false,
     50,
@@ -140,7 +151,7 @@ async function mediaSearch(target) {
   );
 
   if (!response) {
-    Main.displayMessage("Nothing found", "warning");
+    displayMessage("Nothing found", "warning");
   } else {
     document.querySelector(".mediawrapper").innerHTML = response;
   }
@@ -182,7 +193,7 @@ function loadMoreMedia(target) {
 
   loadMore(media[media.length - 1].dataset.index, false);
 
-  Main.showLoader(target, false);
+  showLoader(target, false);
 }
 
 function mediaTypeSelected(target) {
@@ -243,7 +254,7 @@ function mediaTypeSelected(target) {
       types += el.value + "s";
     });
 
-    Main.showLoader(
+    showLoader(
       document.getElementById("loadmoremedia"),
       false,
       50,
@@ -265,7 +276,7 @@ async function downloadMedia(target) {
     CancelButtonText: "Cancel",
   };
 
-  let alerter = new Main.Alert(
+  let alerter = new Alert(
     "Downloading of materials is only allowed for use in presentations. <br>You should not share this file with others as it may contain privacy sensitive information",
     "loader",
     options,
@@ -307,7 +318,7 @@ document.addEventListener("click", async (ev) => {
 
     loadMoreMedia(target);
   } else if (target.matches(".button-wrapper .description")) {
-    Main.displayMessage(atob(target.dataset.description));
+    displayMessage(atob(target.dataset.description));
   } else if (target.matches(".media-type-selector")) {
     // media type selector
     mediaTypeSelected(target);
@@ -350,7 +361,7 @@ document.addEventListener("change", (ev) => {
       var start = parseInt(media[media.length - 1].dataset.index);
       loadMore(start, false, curAmount);
 
-      Main.showLoader(
+      showLoader(
         document.getElementById("loadmoremedia"),
         false,
         50,
