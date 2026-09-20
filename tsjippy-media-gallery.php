@@ -5,13 +5,13 @@ namespace TSJIPPY\MEDIAGALLERY;
 /**
  * Plugin Name:          Tsjippy Media Gallery
  * Description:          This plugin adds a media gallery of downloadable pictures, video's and audio files.
- * Version:              10.6.5
+ * Version:              10.6.6
  * Author:               Ewald Harmsen
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
  * Requires PHP:         8.3
  * Plugin URI:           https://github.com/Tsjippy/mediagallery
- * Tested:               7.1
+ * Tested:               7.1.1
  * TextDomain:           tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
