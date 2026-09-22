@@ -66,6 +66,7 @@ class MediaGallery
         $this->getMedia();
 
         wp_enqueue_style('tsjippy_gallery_style');
+        wp_enqueue_script_module('@tsjippy/gallery_script');
         wp_enqueue_script_module('@tsjippy/refresh_gallery_script');
     }
 

@@ -4,10 +4,9 @@
   "description": "Media gallery",
   "main": "./media_gallery.js",
   "scripts": {
-    "admin": "webpack --entry ./admin.js --output-path . --output-filename admin.min.js --progress --mode=production --devtool source-map",
-    "gallery": "webpack --entry ./media_gallery.js --output-path . --output-filename media_gallery.min.js --progress --mode=production --devtool source-map",
-    "refresh": "webpack --entry ./auto_refresh.js --output-path . --output-filename auto_refresh.min.js --progress --mode=production --devtool source-map",
-    "all": "run-p admin gallery refresh"
+    "build": "webpack --progress",
+    "watch": "webpack --watch --progress",
+    "all": "npm run build"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",
