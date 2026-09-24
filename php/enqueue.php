@@ -27,6 +27,11 @@ function afterInsertPost($postId, $post)
 }
 
 add_action('wp_trash_post', __NAMESPACE__ . '\trashPost');
+/**
+ * Runs when a post is trashed
+ * 
+ * @param   int $postId
+ */
 function trashPost($postId)
 {
     $pages  = SETTINGS['pages'] ?? false;
@@ -41,6 +46,9 @@ function trashPost($postId)
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\enqueueMediaGalleryScripts');
+/**
+ * Registeres the CSS and JS
+ */
 function enqueueMediaGalleryScripts()
 {
     /**
@@ -56,6 +64,8 @@ function enqueueMediaGalleryScripts()
         '@tsjippy/form_submit_functions'
     ] :
     [];
+
+    $deps[] = "@tsjippy/nonce_script";
     wp_register_script_module('@tsjippy/refresh_gallery_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/auto_refresh' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
 
     // Media Gallery
@@ -66,6 +76,8 @@ function enqueueMediaGalleryScripts()
         "@tsjippy/alert"
     ] :
     [];
+
+    $deps[] = "@tsjippy/nonce_script";
     wp_register_script_module('@tsjippy/gallery_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/media_gallery' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
 
 }

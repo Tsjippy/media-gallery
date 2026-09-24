@@ -15,8 +15,6 @@ add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPo
  * Runs after a post is saved or updated
  * 
  * @param   \WP_Post    $post       The new or updated post
- * @param   object      $object     FrontEndContent Instance
- * @param   array       $request    The sanitized request data
  */
 function afterPostSave($post)
 {
@@ -28,6 +26,11 @@ function afterPostSave($post)
 
 // change visibility of an attachment when it is a video or audio
 add_action('add_attachment', __NAMESPACE__ . '\addAttachment');
+/**
+ * Add visibilty settings
+ * 
+ * @param   int $postId
+ */
 function addAttachment($postId)
 {
     $post   = get_post($postId);
@@ -39,6 +42,12 @@ function addAttachment($postId)
 }
 
 add_filter('display_post_states', __NAMESPACE__ . '\postStates', 10, 2);
+/**
+ * Mark as media gallery page
+ * 
+ * @param   array       $states
+ * @param   \WP_Post    $post
+ */
 function postStates($states, $post)
 {
 

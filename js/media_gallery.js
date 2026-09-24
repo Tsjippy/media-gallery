@@ -340,14 +340,14 @@ document.addEventListener("click", async (ev) => {
     return;
   }
 
-  ev.stopImmediatePropagation();
+  ev.stopPropagation();
 });
 
 document.addEventListener("change", (ev) => {
   var target = ev.target;
 
   if (target.id == "media-amount") {
-    ev.stopImmediatePropagation();
+    ev.stopPropagation();
 
     //reset page count
     document.getElementById("paged").value = 1;

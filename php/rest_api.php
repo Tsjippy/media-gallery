@@ -5,6 +5,9 @@ namespace TSJIPPY\MEDIAGALLERY;
 use TSJIPPY;
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
+/**
+ * Registers restapi end points
+ */
 function restApiInit()
 {
     //load more media

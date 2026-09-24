@@ -5,6 +5,9 @@ namespace TSJIPPY\MEDIAGALLERY;
 use TSJIPPY;
 
 add_action('init', __NAMESPACE__ . '\initBlocks');
+/**
+ * Registeres blocks
+ */
 function initBlocks()
 {
     register_block_type(
@@ -42,6 +45,11 @@ function initBlocks()
 }
 
 add_action('enqueue_block_assets', __NAMESPACE__ . '\loadBlockAssets');
+/**
+ * Registeres the CSS and JS
+ *//**
+ * Registeres the CSS and JS
+ */
 function loadBlockAssets()
 {
     if (is_admin()) {
