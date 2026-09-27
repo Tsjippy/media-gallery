@@ -52,10 +52,7 @@ let reloadMediaGallery = async function (gallery, first = false) {
         img.addEventListener("load", () => {
           amount--;
 
-          //console.log('Current amount is '+amount);
-
           if (amount === 0) {
-            //console.log('Updating ');
             gallery.replaceWith(newGallery);
           }
         });
